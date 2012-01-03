@@ -17,11 +17,11 @@
 	[Serializable]
 	public class StatelessSessionDelegate : MarshalByRefObject, IStatelessSession
 	{
-		private readonly IStatelessSession _innerSession;
-		private readonly ISessionStore _sessionStore;
-		private readonly bool _canClose;
-		private bool _disposed;
-		private object _cookie;
+		private readonly IStatelessSession innerSession;
+		private readonly ISessionStore sessionStore;
+		private readonly bool canClose;
+		private bool disposed;
+		private object cookie;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StatelessSessionDelegate"/> class.
@@ -31,9 +31,9 @@
 		/// <param name="sessionStore">The session store.</param>
 		public StatelessSessionDelegate(bool canClose, IStatelessSession innerSession, ISessionStore sessionStore)
 		{
-			this._innerSession = innerSession;
-			this._sessionStore = sessionStore;
-			this._canClose = canClose;
+			this.innerSession = innerSession;
+			this.sessionStore = sessionStore;
+			this.canClose = canClose;
 		}
 
 		/// <summary>
@@ -42,7 +42,7 @@
 		/// <value>The inner session.</value>
 		public IStatelessSession InnerSession
 		{
-			get { return this._innerSession; }
+			get { return innerSession; }
 		}
 
 		/// <summary>
@@ -51,8 +51,8 @@
 		/// <value>The session store cookie.</value>
 		public object SessionStoreCookie
 		{
-			get { return this._cookie; }
-			set { this._cookie = value; }
+			get { return cookie; }
+			set { cookie = value; }
 		}
 
 		#region IStatelessSession delegation
@@ -68,7 +68,7 @@
 		/// </remarks>
 		public IDbConnection Connection
 		{
-			get { return this._innerSession.Connection; }
+			get { return innerSession.Connection; }
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@
 		{
 			get
 			{
-				return this._innerSession.IsConnected;
+				return innerSession.IsConnected;
 			}
 		}
 
@@ -89,7 +89,7 @@
 		{
 			get
 			{
-				return this._innerSession.IsOpen;
+				return innerSession.IsOpen;
 			}
 		}
 
@@ -98,7 +98,7 @@
 		/// </summary>
 		public ITransaction Transaction
 		{
-			get { return this._innerSession.Transaction; }
+			get { return innerSession.Transaction; }
 		}
 
 		/// <summary>
@@ -106,7 +106,7 @@
 		/// </summary>
 		public ITransaction BeginTransaction()
 		{
-			return this._innerSession.BeginTransaction();
+			return innerSession.BeginTransaction();
 		}
 
 		/// <summary>
@@ -118,7 +118,7 @@
 		/// </returns>
 		public ITransaction BeginTransaction(IsolationLevel isolationLevel)
 		{
-			return this._innerSession.BeginTransaction(isolationLevel);
+			return innerSession.BeginTransaction(isolationLevel);
 		}
 
 		/// <summary>
@@ -126,7 +126,7 @@
 		/// </summary>
 		public void Close()
 		{
-			this._innerSession.Close();
+			innerSession.Close();
 		}
 
 		/// <summary>
@@ -142,7 +142,7 @@
 		/// </remarks>
 		public ICriteria CreateCriteria<T>() where T : class
 		{
-			return this._innerSession.CreateCriteria<T>();
+			return innerSession.CreateCriteria<T>();
 		}
 
 		/// <summary>
@@ -159,7 +159,7 @@
 		/// </remarks>
 		public ICriteria CreateCriteria<T>(string alias) where T : class
 		{
-			return this._innerSession.CreateCriteria<T>(alias);
+			return innerSession.CreateCriteria<T>(alias);
 		}
 
 		/// <summary>
@@ -175,7 +175,7 @@
 		/// </remarks>
 		public ICriteria CreateCriteria(Type entityType)
 		{
-			return this._innerSession.CreateCriteria(entityType);
+			return innerSession.CreateCriteria(entityType);
 		}
 
 		/// <summary>
@@ -192,7 +192,7 @@
 		/// </remarks>
 		public ICriteria CreateCriteria(Type entityType, string alias)
 		{
-			return this._innerSession.CreateCriteria(entityType, alias);
+			return innerSession.CreateCriteria(entityType, alias);
 		}
 
 		/// <summary>
@@ -207,7 +207,7 @@
 		/// </remarks>
 		public ICriteria CreateCriteria(string entityName)
 		{
-			return this._innerSession.CreateCriteria(entityName);
+			return innerSession.CreateCriteria(entityName);
 		}
 
 		/// <summary>
@@ -224,7 +224,7 @@
 		/// </remarks>
 		public ICriteria CreateCriteria(string entityName, string alias)
 		{
-			return this._innerSession.CreateCriteria(entityName, alias);
+			return innerSession.CreateCriteria(entityName, alias);
 		}
 
 		/// <summary>
@@ -235,7 +235,7 @@
 		/// </remarks>
 		public IQuery CreateQuery(string queryString)
 		{
-			return this._innerSession.CreateQuery(queryString);
+			return innerSession.CreateQuery(queryString);
 		}
 
 		/// <summary>
@@ -248,7 +248,7 @@
 		/// </returns>
 		public ISQLQuery CreateSQLQuery(string queryString)
 		{
-			return this._innerSession.CreateSQLQuery(queryString);
+			return innerSession.CreateSQLQuery(queryString);
 		}
 
 		/// <summary>
@@ -257,7 +257,7 @@
 		/// <param name="entity">a detached entity instance </param>
 		public void Delete(object entity)
 		{
-			this._innerSession.Delete(entity);
+			innerSession.Delete(entity);
 		}
 
 		/// <summary>
@@ -267,7 +267,7 @@
 		/// <param name="entity">a detached entity instance </param>
 		public void Delete(string entityName, object entity)
 		{
-			this._innerSession.Delete(entityName, entity);
+			innerSession.Delete(entityName, entity);
 		}
 
 		/// <summary>
@@ -278,7 +278,7 @@
 		/// </returns>
 		public object Get(string entityName, object id)
 		{
-			return this._innerSession.Get(entityName, id);
+			return innerSession.Get(entityName, id);
 		}
 
 		/// <summary>
@@ -289,7 +289,7 @@
 		/// </returns>
 		public T Get<T>(object id)
 		{
-			return this._innerSession.Get<T>(id);
+			return innerSession.Get<T>(id);
 		}
 
 		/// <summary>
@@ -300,7 +300,7 @@
 		/// </returns>
 		public object Get(string entityName, object id, LockMode lockMode)
 		{
-			return this._innerSession.Get(entityName, id, lockMode);
+			return innerSession.Get(entityName, id, lockMode);
 		}
 
 		/// <summary>
@@ -311,7 +311,7 @@
 		/// </returns>
 		public T Get<T>(object id, LockMode lockMode)
 		{
-			return this._innerSession.Get<T>(id, lockMode);
+			return innerSession.Get<T>(id, lockMode);
 		}
 
 		/// <summary>
@@ -324,7 +324,7 @@
 		/// </remarks>
 		public IQuery GetNamedQuery(string queryName)
 		{
-			return this._innerSession.GetNamedQuery(queryName);
+			return innerSession.GetNamedQuery(queryName);
 		}
 
 		/// <summary>
@@ -339,7 +339,7 @@
 		/// </returns>
 		public ISessionImplementor GetSessionImplementation()
 		{
-			return this._innerSession.GetSessionImplementation();
+			return innerSession.GetSessionImplementation();
 		}
 
 		/// <summary>
@@ -351,7 +351,7 @@
 		/// </returns>
 		public object Insert(object entity)
 		{
-			return this._innerSession.Insert(entity);
+			return innerSession.Insert(entity);
 		}
 
 		/// <summary>
@@ -364,7 +364,7 @@
 		/// </returns>
 		public object Insert(string entityName, object entity)
 		{
-			return this._innerSession.Insert(entityName, entity);
+			return innerSession.Insert(entityName, entity);
 		}
 
 		/// <summary>
@@ -376,7 +376,7 @@
 		/// </returns>
 		public IQueryOver<T, T> QueryOver<T>() where T : class
 		{
-			return this._innerSession.QueryOver<T>();
+			return innerSession.QueryOver<T>();
 		}
 
 		/// <summary>
@@ -388,7 +388,7 @@
 		/// </returns>
 		public IQueryOver<T, T> QueryOver<T>(Expression<Func<T>> alias) where T : class
 		{
-			return this._innerSession.QueryOver(alias);
+			return innerSession.QueryOver(alias);
 		}
 
 		/// <summary>
@@ -397,7 +397,7 @@
 		/// <param name="entity">The entity to be refreshed. </param>
 		public void Refresh(object entity)
 		{
-			this._innerSession.Refresh(entity);
+			innerSession.Refresh(entity);
 		}
 
 		/// <summary>
@@ -407,7 +407,7 @@
 		/// <param name="entity">The entity to be refreshed.</param>
 		public void Refresh(string entityName, object entity)
 		{
-			this._innerSession.Refresh(entityName, entity);
+			innerSession.Refresh(entityName, entity);
 		}
 
 		/// <summary>
@@ -417,7 +417,7 @@
 		/// <param name="lockMode">The LockMode to be applied.</param>
 		public void Refresh(object entity, LockMode lockMode)
 		{
-			this._innerSession.Refresh(entity, lockMode);
+			innerSession.Refresh(entity, lockMode);
 		}
 
 		/// <summary>
@@ -428,7 +428,7 @@
 		/// <param name="lockMode">The LockMode to be applied. </param>
 		public void Refresh(string entityName, object entity, LockMode lockMode)
 		{
-			this._innerSession.Refresh(entityName, entity, lockMode);
+			innerSession.Refresh(entityName, entity, lockMode);
 		}
 
 		/// <summary>
@@ -440,7 +440,7 @@
 		/// </returns>
 		public IStatelessSession SetBatchSize(int batchSize)
 		{
-			return this._innerSession.SetBatchSize(batchSize);
+			return innerSession.SetBatchSize(batchSize);
 		}
 
 		/// <summary>
@@ -449,7 +449,7 @@
 		/// <param name="entity">a detached entity instance </param>
 		public void Update(object entity)
 		{
-			this._innerSession.Update(entity);
+			innerSession.Update(entity);
 		}
 
 		/// <summary>
@@ -459,7 +459,7 @@
 		/// <param name="entity">a detached entity instance </param>
 		public void Update(string entityName, object entity)
 		{
-			this._innerSession.Update(entityName, entity);
+			innerSession.Update(entityName, entity);
 		}
 
 		#endregion
@@ -472,7 +472,7 @@
 		/// <filterpriority>2</filterpriority>
 		public void Dispose()
 		{
-			this.DoClose(false);
+			DoClose(false);
 		}
 
 		#endregion
@@ -484,11 +484,11 @@
 		/// <returns></returns>
 		protected IDbConnection DoClose(bool closing)
 		{
-			if (this._disposed) return null;
+			if (disposed) return null;
 
-			if (this._canClose)
+			if (canClose)
 			{
-				return this.InternalClose(closing);
+				return InternalClose(closing);
 			}
 
 			return null;
@@ -498,17 +498,17 @@
 		{
 			IDbConnection conn = null;
 
-			this._sessionStore.Remove(this);
+			sessionStore.Remove(this);
 
 			if (closing)
 			{
-				conn = this._innerSession.Connection;
-				this._innerSession.Close();
+				conn = innerSession.Connection;
+				innerSession.Close();
 			}
 
-			this._innerSession.Dispose();
+			innerSession.Dispose();
 
-			this._disposed = true;
+			disposed = true;
 
 			return conn;
 		}
@@ -526,7 +526,7 @@
 
 			if (ssdLeft != null && ssdRight != null)
 			{
-				return Object.ReferenceEquals(ssdLeft._innerSession, ssdRight._innerSession);
+				return Object.ReferenceEquals(ssdLeft.innerSession, ssdRight.innerSession);
 			}
 			else
 			{

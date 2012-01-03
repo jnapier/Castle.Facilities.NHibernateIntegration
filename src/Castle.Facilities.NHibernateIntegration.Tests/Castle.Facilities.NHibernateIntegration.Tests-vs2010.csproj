@@ -137,10 +137,6 @@
       <Name>nunit.framework</Name>
       <HintPath>..\..\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="Rhino.Mocks, Version=3.5.0.1, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Rhino.Mocks.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -169,13 +165,9 @@
     <Compile Include="Common\BlogItem.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\BlogItemDao.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Common\BlogRef.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\BlogRepository.cs" />
     <Compile Include="Common\CustomDeleteListener.cs" />
     <Compile Include="Common\CustomSaveUpdateListener.cs" />
     <Compile Include="DaoTestCase.cs">
@@ -194,6 +186,33 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\FacilityFluentConfigTestCase.cs" />
+    <Compile Include="Issues\Facilities102\Fixture.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Issues\Facilities106\Fixture.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Issues\Facilities112\Fixture.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Issues\Facilities116\Fixture.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Issues\Facilities119\IndividualConfigurationBuildersTestCase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Issues\Facilities119\TestConfigurationBuilder2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Issues\Facilities119\TestConfigurationBuilder3.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Issues\Facilities152\Fixture.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Issues\IssueTestCase.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SessionCreation\DaoTestCase.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -203,7 +222,6 @@
     <Compile Include="SessionCreation\MySecondDao.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SessionManagementInterceptorsTestCase.cs" />
     <Compile Include="Configuration\TestConfigurationBuilder.cs" />
     <Compile Include="Wiring\DaoTestCase.cs">
       <SubType>Code</SubType>
@@ -282,6 +300,12 @@
     <EmbeddedResource Include="invalidConfigurationBuilder.xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Issues\Facilities102\facility.xml" />
+    <EmbeddedResource Include="Issues\Facilities106\factory1.xml" />
+    <EmbeddedResource Include="Issues\Facilities116\facility.xml" />
+    <EmbeddedResource Include="Issues\Facilities119\facility.xml" />
+    <EmbeddedResource Include="Issues\Facilities152\facilitynonweb.xml" />
+    <EmbeddedResource Include="Issues\Facilities152\facilityweb.xml" />
     <EmbeddedResource Include="MinimalConfiguration.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

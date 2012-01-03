@@ -156,11 +156,11 @@ namespace Castle.Facilities.NHibernateIntegration
 		{
 			get
 			{
-				return this.inner.DefaultReadOnly;
+				return inner.DefaultReadOnly;
 			}
 			set
 			{
-				this.inner.DefaultReadOnly = value;
+				inner.DefaultReadOnly = value;
 			}
 		}
 
@@ -209,7 +209,7 @@ namespace Castle.Facilities.NHibernateIntegration
 		/// <seealso cref="P:NHibernate.ISession.DefaultReadOnly"/><seealso cref="M:NHibernate.ISession.SetReadOnly(System.Object,System.Boolean)"/>
 		public bool IsReadOnly(object entityOrProxy)
 		{
-			return this.inner.IsReadOnly(entityOrProxy);
+			return inner.IsReadOnly(entityOrProxy);
 		}
 
 		/// <summary>
@@ -234,7 +234,7 @@ namespace Castle.Facilities.NHibernateIntegration
 		/// <param name="entityOrProxy">An entity (or <see cref="T:NHibernate.Proxy.INHibernateProxy"/>).</param><param name="readOnly">If <c>true</c>, the entity or proxy is made read-only; if <c>false</c>, it is made modifiable.</param><seealso cref="P:NHibernate.ISession.DefaultReadOnly"/><seealso cref="M:NHibernate.ISession.IsReadOnly(System.Object)"/>
 		public void SetReadOnly(object entityOrProxy, bool readOnly)
 		{
-			this.inner.SetReadOnly(entityOrProxy, readOnly);
+			inner.SetReadOnly(entityOrProxy, readOnly);
 		}
 
 		/// <summary>
@@ -748,7 +748,7 @@ namespace Castle.Facilities.NHibernateIntegration
 		/// </returns>
 		public T Merge<T>(T entity) where T : class
 		{
-			return this.inner.Merge(entity);
+			return inner.Merge(entity);
 		}
 
 		/// <summary>
@@ -768,7 +768,7 @@ namespace Castle.Facilities.NHibernateIntegration
 		/// <returns/>
 		public T Merge<T>(string entityName, T entity) where T : class
 		{
-			return this.inner.Merge(entityName, entity);
+			return inner.Merge(entityName, entity);
 		}
 
 		/// <summary> 
@@ -1233,25 +1233,6 @@ namespace Castle.Facilities.NHibernateIntegration
 		public IQuery CreateSQLQuery(string sql, string returnAlias, Type returnClass)
 		{
 			return inner.CreateSQLQuery(sql).AddEntity(returnAlias, returnClass);
-		}
-
-		/// <summary>
-		/// Create a new instance of <see cref="T:NHibernate.IQuery"/> for the given SQL string.
-		/// </summary>
-		/// <param name="sql">a query expressed in SQL</param>
-		/// <param name="returnAliases">an array of table aliases that appear inside <c>{}</c> in the SQL string</param>
-		/// <param name="returnClasses">the returned persistent classes</param>
-		/// <returns>
-		/// An <see cref="T:NHibernate.IQuery"/> from the SQL string
-		/// </returns>
-		public IQuery CreateSQLQuery(string sql, string[] returnAliases, Type[] returnClasses)
-		{
-			ISQLQuery query = inner.CreateSQLQuery(sql);
-			for (int i = 0; i < returnAliases.Length; i++)
-			{
-				query.AddEntity(returnAliases[i], returnClasses[i]);
-			}
-			return query;
 		}
 
 		/// <summary>

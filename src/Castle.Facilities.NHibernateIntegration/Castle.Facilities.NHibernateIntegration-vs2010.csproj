@@ -63,8 +63,7 @@
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
-    <NoWarn>
-    </NoWarn>
+    <NoWarn>3001</NoWarn>
     <Optimize>false</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
@@ -86,7 +85,7 @@
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
-    <NoWarn>0618</NoWarn>
+    <NoWarn>0618;3001</NoWarn>
     <Optimize>true</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
@@ -100,6 +99,9 @@
     <Reference Include="Castle.Core">
       <Name>Castle.Core</Name>
       <HintPath>..\..\lib\$(BuildConfigKey)\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.AutoTx">
+      <HintPath>..\..\lib\net40\Castle.Facilities.AutoTx.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Services.Transaction">
       <Name>Castle.Services.Transaction</Name>
@@ -146,10 +148,6 @@
     <Compile Include="Components\Web\SessionWebModule.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NHSessionAttribute.cs" />
-    <Compile Include="Internal\NHSessionComponentInspector.cs" />
-    <Compile Include="Internal\NHSessionInterceptor.cs" />
-    <Compile Include="Internal\StatelessSessionDisposeSynchronization.cs" />
     <Compile Include="Internal\StatelessSessionDelegate.cs" />
     <Compile Include="Util\FieldInfoCollection.cs">
       <SubType>Code</SubType>
@@ -188,14 +186,8 @@
     <Compile Include="ISessionStore.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Internal\ResourceAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Builders\PersistentConfigurationBuilder.cs" />
     <Compile Include="Internal\SessionDelegate.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Internal\SessionDisposeSynchronization.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Internal\SessionFactoryActivator.cs" />

@@ -12,10 +12,10 @@
 						NHibernate.Connection.DriverConnectionProvider
 					</item>
 					<item key="connection.driver_class">
-						NHibernate.Driver.Sql2008ClientDriver
+						NHibernate.Driver.Sql2008ClientDriver, NHibernate
 					</item>
 					<item key="dialect">
-						NHibernate.Dialect.MsSql2008Dialect
+						NHibernate.Dialect.MsSql2008Dialect, NHibernate
 					</item>
 					<item key="connection.connection_string">
 						Data Source=.; Initial Catalog=test; Integrated Security=SSPI

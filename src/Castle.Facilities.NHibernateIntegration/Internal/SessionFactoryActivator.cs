@@ -61,13 +61,19 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 		/// Creates the <see cref="ISessionFactory"/> from the configuration
 		/// </summary>
 		/// <param name="context"></param>
+		/// <param name="burden"> </param>
 		/// <returns></returns>
-		public override object Create(CreationContext context)
+		public override object Create(CreationContext context, Burden burden)
 		{
 			RaiseCreatingSessionFactory();
 			var configuration = Model.ExtendedProperties[Constants.SessionFactoryConfiguration]
 			                    as Configuration;
-			return configuration.BuildSessionFactory();
+
+			var factory = configuration.BuildSessionFactory();
+
+			burden.SetRootInstance(factory);
+			
+			return factory;
 		}
 	}
 }

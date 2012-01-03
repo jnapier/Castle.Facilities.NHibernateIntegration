@@ -99,11 +99,9 @@ namespace Castle.Facilities.NHibernateIntegration
 
 			SessionDelegate wrapped = sessionStore.FindCompatibleSession(alias);
 
-			ISession session;
-
 			if (wrapped == null)
 			{
-				session = CreateSession(alias);
+				var session = CreateSession(alias);
 
 				wrapped = WrapSession(transaction != null, session);
 				EnlistIfNecessary(true, transaction, wrapped);
@@ -142,11 +140,9 @@ namespace Castle.Facilities.NHibernateIntegration
 
 			StatelessSessionDelegate wrapped = sessionStore.FindCompatibleStatelessSession(alias);
 
-			IStatelessSession session;
-
 			if (wrapped == null)
 			{
-				session = CreateStatelessSession(alias);
+				IStatelessSession session = CreateStatelessSession(alias);
 
 				wrapped = WrapSession(transaction != null, session);
 				EnlistIfNecessary(true, transaction, wrapped);
@@ -174,7 +170,7 @@ namespace Castle.Facilities.NHibernateIntegration
 		{
 			if (transaction == null) return false;
 
-			var list = (IList<ISession>) transaction.Context["nh.session.enlisted"];
+			var list = transaction.DataContext.ContainsKey("nh.session.enlisted") ? (IList<ISession>) transaction.DataContext["nh.session.enlisted"] : null;
 
 			bool shouldEnlist;
 
@@ -202,18 +198,18 @@ namespace Castle.Facilities.NHibernateIntegration
 			{
 				if (session.Transaction == null || !session.Transaction.IsActive)
 				{
-					transaction.Context["nh.session.enlisted"] = list;
+					transaction.DataContext["nh.session.enlisted"] = list;
 
-					IsolationLevel level = TranslateIsolationLevel(transaction.IsolationMode);
-					transaction.Enlist(new ResourceAdapter(session.BeginTransaction(level), transaction.IsAmbient));
+					//IsolationLevel level = TranslateIsolationLevel(transaction.IsolationMode);
+					//transaction.Enlist(new ResourceAdapter(session.BeginTransaction(level), transaction.IsAmbient));
 
 					list.Add(session);
 				}
 
-				if (weAreSessionOwner)
-				{
-					transaction.RegisterSynchronization(new SessionDisposeSynchronization(session));
-				}
+				//if (weAreSessionOwner)
+				//{
+				//    transaction.RegisterSynchronization(new SessionDisposeSynchronization(session));
+				//}
 			}
 
 			return true;
@@ -232,7 +228,7 @@ namespace Castle.Facilities.NHibernateIntegration
 		{
 			if (transaction == null) return false;
 
-			var list = (IList<IStatelessSession>) transaction.Context["nh.statelessSession.enlisted"];
+			var list = transaction.DataContext.ContainsKey("nh.statelessSession.enlisted") ? (IList<IStatelessSession>) transaction.DataContext["nh.statelessSession.enlisted"] : null;
 
 			bool shouldEnlist;
 
@@ -260,47 +256,47 @@ namespace Castle.Facilities.NHibernateIntegration
 			{
 				if (session.Transaction == null || !session.Transaction.IsActive)
 				{
-					transaction.Context["nh.statelessSession.enlisted"] = list;
+					transaction.DataContext["nh.statelessSession.enlisted"] = list;
 
-					IsolationLevel level = TranslateIsolationLevel(transaction.IsolationMode);
-					transaction.Enlist(new ResourceAdapter(session.BeginTransaction(level), transaction.IsAmbient));
+					//IsolationLevel level = TranslateIsolationLevel(transaction.IsolationMode);
+					//transaction.Enlist(new ResourceAdapter(session.BeginTransaction(level), transaction.IsAmbient));
 
 					list.Add(session);
 				}
 
-				if (weAreSessionOwner)
-				{
-					transaction.RegisterSynchronization(new StatelessSessionDisposeSynchronization(session));
-				}
+				//if (weAreSessionOwner)
+				//{
+				//    transaction.RegisterSynchronization(new StatelessSessionDisposeSynchronization(session));
+				//}
 			}
 
 			return true;
 		}
 
-		private static IsolationLevel TranslateIsolationLevel(IsolationMode mode)
-		{
-			switch (mode)
-			{
-				case IsolationMode.Chaos:
-					return IsolationLevel.Chaos;
-				case IsolationMode.ReadCommitted:
-					return IsolationLevel.ReadCommitted;
-				case IsolationMode.ReadUncommitted:
-					return IsolationLevel.ReadUncommitted;
-				case IsolationMode.RepeatableRead:
-					return IsolationLevel.RepeatableRead;
-				case IsolationMode.Serializable:
-					return IsolationLevel.Serializable;
-				default:
-					return IsolationLevel.Unspecified;
-			}
-		}
+		//private static IsolationLevel TranslateIsolationLevel(IsolationMode mode)
+		//{
+		//    switch (mode)
+		//    {
+		//        case IsolationMode.Chaos:
+		//            return IsolationLevel.Chaos;
+		//        case IsolationMode.ReadCommitted:
+		//            return IsolationLevel.ReadCommitted;
+		//        case IsolationMode.ReadUncommitted:
+		//            return IsolationLevel.ReadUncommitted;
+		//        case IsolationMode.RepeatableRead:
+		//            return IsolationLevel.RepeatableRead;
+		//        case IsolationMode.Serializable:
+		//            return IsolationLevel.Serializable;
+		//        default:
+		//            return IsolationLevel.Unspecified;
+		//    }
+		//}
 
 		private ITransaction ObtainCurrentTransaction()
 		{
 			ITransactionManager transactionManager = kernel.Resolve<ITransactionManager>();
 
-			return transactionManager.CurrentTransaction;
+			return transactionManager.CurrentTransaction.HasValue ? transactionManager.CurrentTransaction.Value : null;
 		}
 
 		private SessionDelegate WrapSession(bool hasTransaction, ISession session)

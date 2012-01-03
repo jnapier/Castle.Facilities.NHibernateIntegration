@@ -87,7 +87,7 @@ namespace Castle.Facilities.NHibernateIntegration
 	    internal const string CustomStoreConfigurationKey = "customStore";
 	    internal const string DefaultFlushModeConfigurationKey = "defaultFlushMode";
 		private const string SessionManagerKey = "nhfacility.sessionmanager";
-		private const string TransactionManagerKey = "nhibernate.transaction.manager";
+		
 	    internal const string SessionFactoryIdConfigurationKey = "id";
 	    internal const string SessionFactoryAliasConfigurationKey = "alias";
 		private const string SessionStoreKey = "nhfacility.sessionstore";
@@ -143,14 +143,11 @@ namespace Castle.Facilities.NHibernateIntegration
 		/// </summary>
 		protected virtual void RegisterComponents()
 		{
-			Kernel.Register(Component.For<NHSessionInterceptor>().Named("nhsession.interceptor"));
-			Kernel.ComponentModelBuilder.AddContributor(new NHSessionComponentInspector());
-
 			RegisterDefaultConfigurationBuilder();
 			RegisterSessionFactoryResolver();
 			RegisterSessionStore();
 			RegisterSessionManager();
-			RegisterTransactionManager();
+			VerifyIsTxManagerIsPresent();
 		}
 
 
@@ -229,15 +226,15 @@ namespace Castle.Facilities.NHibernateIntegration
 		}
 
 		/// <summary>
-		/// Registers <see cref="DefaultTransactionManager"/> as the transaction manager.
+		/// Checks if a <see cref="ITransactionManager"/> is registered as the transaction manager.
 		/// </summary>
-		protected void RegisterTransactionManager()
+		protected void VerifyIsTxManagerIsPresent()
 		{
 			if (!Kernel.HasComponent(typeof (ITransactionManager)))
 			{
-				log.Info("No Transaction Manager registered on Kernel, registering default Transaction Manager");
-				Kernel.Register(
-					Component.For<ITransactionManager>().ImplementedBy<DefaultTransactionManager>().Named(TransactionManagerKey));
+				log.Warn("No Transaction Manager registered on Kernel, registering default Transaction Manager");
+				
+				//TODO: Better notification
 			}
 		}
 
@@ -290,20 +287,20 @@ namespace Castle.Facilities.NHibernateIntegration
 
 			if (string.IsNullOrEmpty(id))
 			{
-				String message = "You must provide a " +
-				                 "valid 'id' attribute for the 'factory' node. This id is used as key for " +
-				                 "the ISessionFactory component registered on the container";
+				const string message = "You must provide a " +
+				                       "valid 'id' attribute for the 'factory' node. This id is used as key for " +
+				                       "the ISessionFactory component registered on the container";
 
 				throw new ConfigurationErrorsException(message);
 			}
 
-            String alias = config.Alias;
+			String alias = config.Alias;
 
 			if (!firstFactory && (string.IsNullOrEmpty(alias)))
 			{
-				String message = "You must provide a " +
-				                 "valid 'alias' attribute for the 'factory' node. This id is used to obtain " +
-				                 "the ISession implementation from the SessionManager";
+				const string message = "You must provide a " +
+				                       "valid 'alias' attribute for the 'factory' node. This id is used to obtain " +
+				                       "the ISession implementation from the SessionManager";
 
 				throw new ConfigurationErrorsException(message);
 			}
@@ -362,7 +359,7 @@ namespace Castle.Facilities.NHibernateIntegration
 
 			if (factoriesConfig == null)
 			{
-				String message = "You need to configure at least one factory to use the NHibernateFacility";
+				const string message = "You need to configure at least one factory to use the NHibernateFacility";
 
 				throw new ConfigurationErrorsException(message);
 			}
@@ -372,7 +369,7 @@ namespace Castle.Facilities.NHibernateIntegration
 		{
 			if (!facilitySettingConfig.IsValid())
 			{
-				String message = "The NHibernateFacility requires configuration";
+				const string message = "The NHibernateFacility requires configuration";
 
 				throw new ConfigurationErrorsException(message);
 			}
@@ -422,7 +419,6 @@ namespace Castle.Facilities.NHibernateIntegration
         private Type configurationBuilderType;
         private IConfiguration facilityConfig;
         private bool isWeb;
-        private bool useReflectionOptimizer = false;
         private IKernel kernel;
         private Type customStore;
 
@@ -554,7 +550,7 @@ namespace Castle.Facilities.NHibernateIntegration
 
         public bool HasValidFactory()
         {
-            return Factories.Count() > 0;
+            return Factories.Any();
         }
 
         public bool ShouldUseReflectionOptimizer()
@@ -564,11 +560,9 @@ namespace Castle.Facilities.NHibernateIntegration
                 bool result;
                 if (bool.TryParse(facilityConfig.Attributes["useReflectionOptimizer"], out result))
                     return result;
-
-                return false;
             }
 
-            return useReflectionOptimizer;
+            return false;
         }
 
         public bool HasConcreteConfigurationBuilder()
@@ -607,7 +601,7 @@ namespace Castle.Facilities.NHibernateIntegration
     ///</summary>
 	public class NHibernateFactoryConfiguration
 	{
-        private IConfiguration config;
+        private readonly IConfiguration config;
 
         ///<summary>
         ///</summary>

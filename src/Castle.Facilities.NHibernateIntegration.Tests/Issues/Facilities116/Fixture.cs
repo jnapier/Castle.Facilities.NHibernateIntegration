@@ -27,6 +27,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities116
 	using Builders;
 	using Core.Configuration;
 	using Core.Resource;
+	using MicroKernel;
 	using MicroKernel.SubSystems.Configuration;
 	using NUnit.Framework;
 	using Windsor.Configuration.Interpreters;
@@ -49,8 +50,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities116
 			var configurationStore = new DefaultConfigurationStore();
 			var resource = new AssemblyResource("Castle.Facilities.NHibernateIntegration.Tests/Issues/Facilities116/facility.xml");
 			var xmlInterpreter = new XmlInterpreter(resource);
-			xmlInterpreter.ProcessResource(resource, configurationStore);
-			configuration = configurationStore.GetFacilityConfiguration("nhibernatefacility").Children["factory"];
+			xmlInterpreter.ProcessResource(resource, configurationStore, new DefaultKernel());
+			configuration = configurationStore.GetFacilityConfiguration(typeof(NHibernateFacility).FullName).Children["factory"];
 			configurationBuilder = new PersistentConfigurationBuilder();
 		}
 
@@ -63,7 +64,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities116
 		public void Can_create_serialized_file_in_the_disk()
 		{
 			Assert.IsFalse(File.Exists(filename));
-			Configuration cfg = configurationBuilder.GetConfiguration(configuration);
+			configurationBuilder.GetConfiguration(configuration);
 			Assert.IsTrue(File.Exists(filename));
 			BinaryFormatter bf = new BinaryFormatter();
 			Configuration nhConfig;
@@ -101,7 +102,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities116
 			Assert.IsFalse(File.Exists(filename));
 			Configuration nhConfig = configurationBuilder.GetConfiguration(configuration);
 			Assert.IsTrue(File.Exists(filename));
-			DateTime dateTime = File.GetLastWriteTime(filename);
+			File.GetLastWriteTime(filename);
 			Thread.Sleep(1000);
 			DateTime dateTime2 = DateTime.Now;
 			File.Create("SampleDllFile").Dispose();

@@ -20,12 +20,16 @@
 namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities112
 {
 	using System.Reflection;
+
+	using Castle.MicroKernel;
+
 	using Core;
 	using MicroKernel.Handlers;
 	using MicroKernel.Lifestyle;
 	using NHibernate;
 	using NUnit.Framework;
 
+	//NOTE: We should consider drop this ut. To much intrusion
 	[TestFixture]
 	public class LazyInitializationTestCase : IssueTestCase
 	{
@@ -41,7 +45,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities112
 			var lifestyleManagerField = typeof (DefaultHandler).GetField("lifestyleManager",
 			                                                             BindingFlags.NonPublic | BindingFlags.Instance |
 			                                                             BindingFlags.GetField);
-			var instanceField = typeof (SingletonLifestyleManager).GetField("instance",
+			var instanceField = typeof (SingletonLifestyleManager).GetField("cachedBurden",
 			                                                                BindingFlags.NonPublic | BindingFlags.Instance |
 			                                                                BindingFlags.GetField);
 			var lifeStyleManager = lifestyleManagerField.GetValue(handler) as SingletonLifestyleManager;
@@ -51,8 +55,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities112
 
 			container.Resolve<ISessionFactory>();
 
-			instance = instanceField.GetValue(lifeStyleManager);
-			Assert.IsNotNull(instance);
+			var burden = instanceField.GetValue(lifeStyleManager) as Burden;
+			Assert.IsNotNull(burden.Instance);
 		}
 
 		[Test]

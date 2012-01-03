@@ -1,12 +1,11 @@
 namespace Castle.Facilities.NHibernateIntegration.Tests.Configuration
 {
+	using AutoTx;
 	using Castle.Core.Configuration;
 	using Castle.Facilities.NHibernateIntegration.SessionStores;
-	using Castle.Core.Resource;
 	using Castle.MicroKernel.Facilities;
 	using NUnit.Framework;
 	using Castle.Windsor;
-	using Castle.Windsor.Configuration.Interpreters;
 
 	[TestFixture]
     public class FacilityFluentConfigTestCase
@@ -16,6 +15,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Configuration
         {
             var container = new WindsorContainer();
 
+        	container.AddFacility<AutoTxFacility>();
             container.AddFacility<NHibernateFacility>(f => f.ConfigurationBuilder<TestConfigurationBuilder>());
 
             var sessionManager = container.Resolve<ISessionManager>();
@@ -26,35 +26,18 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Configuration
         [Test]
         public void Should_override_DefaultConfigurationBuilder()
         {
-            var file = "Castle.Facilities.NHibernateIntegration.Tests/MinimalConfiguration.xml";
+            var container = new WindsorContainer();
 
-            var container = new WindsorContainer(new XmlInterpreter(new AssemblyResource(file)));
-
+			container.AddFacility<AutoTxFacility>();
             container.AddFacility<NHibernateFacility>(f => f.ConfigurationBuilder<DummyConfigurationBuilder>());
 
             Assert.AreEqual(typeof(DummyConfigurationBuilder), container.Resolve<IConfigurationBuilder>().GetType());
         }
 
-        [Test]
-        public void Should_override_IsWeb()
-        {
-            var file = "Castle.Facilities.NHibernateIntegration.Tests/MinimalConfiguration.xml";
-
-            var container = new WindsorContainer(new XmlInterpreter(new AssemblyResource(file)));
-
-            container.AddFacility<NHibernateFacility>(f => f.IsWeb().ConfigurationBuilder<DummyConfigurationBuilder>());
-
-            var sessionStore = container.Resolve<ISessionStore>();
-
-            Assert.IsInstanceOf(typeof(CallContextSessionStore), sessionStore);
-        }
-
         [Test, ExpectedException(typeof(FacilityException))]
         public void Should_not_accept_non_implementors_of_IConfigurationBuilder_for_override()
         {
-            var file = "Castle.Facilities.NHibernateIntegration.Tests/MinimalConfiguration.xml";
-
-            var container = new WindsorContainer(new XmlInterpreter(new AssemblyResource(file)));
+            var container = new WindsorContainer();
 
             container.AddFacility<NHibernateFacility>(f => f.ConfigurationBuilder(GetType()));
         }

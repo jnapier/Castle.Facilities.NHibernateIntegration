@@ -4,10 +4,10 @@
 	<session-factory name="sessionFactory1 ">
 		<property name="connection.provider">DummyProvider</property>
 		<property name="connection.driver_class">
-			NHibernate.Driver.Sql2008ClientDriver
+			NHibernate.Driver.Sql2008ClientDriver, NHibernate
 		</property>
 		<property name="dialect">
-			NHibernate.Dialect.MsSql2008Dialect
+			NHibernate.Dialect.MsSql2008Dialect, NHibernate
 		</property>
 		<property name="connection.connection_string">
 			Data Source=.; Initial Catalog=test; Integrated Security=SSPI
