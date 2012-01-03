@@ -17,17 +17,17 @@
 
 #endregion
 
-namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
+namespace Castle.Facilities.NHibernateIntegration.Tests.Configuration
 {
 	using System.Configuration;
-	using Builders;
-	using Core.Configuration;
-	using Core.Resource;
-	using MicroKernel.Facilities;
+	using Castle.Facilities.NHibernateIntegration.Builders;
+	using Castle.Core.Configuration;
+	using Castle.Core.Resource;
+	using Castle.MicroKernel.Facilities;
 	using NHibernate;
 	using NUnit.Framework;
-	using Windsor;
-	using Windsor.Configuration.Interpreters;
+	using Castle.Windsor;
+	using Castle.Windsor.Configuration.Interpreters;
 	using Configuration = NHibernate.Cfg.Configuration;
 
 	public class CustomConfigurationBuilder : IConfigurationBuilder

@@ -17,9 +17,9 @@
 
 #endregion
 
-namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
+namespace Castle.Facilities.NHibernateIntegration.Tests.Configuration
 {
-	using Common;
+	using Castle.Facilities.NHibernateIntegration.Tests.Common;
 	using NHibernate.Cfg;
 	using NUnit.Framework;
 

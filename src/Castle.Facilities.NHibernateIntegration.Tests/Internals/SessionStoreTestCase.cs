@@ -30,8 +30,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
 	[TestFixture]
 	public class SessionStoreTestCase : AbstractNHibernateTestCase
 	{
-		private AutoResetEvent arEvent = new AutoResetEvent(false);
-		private AutoResetEvent _event = new AutoResetEvent(false);
+		private readonly AutoResetEvent arEvent = new AutoResetEvent(false);
 
 		[Test]
 		public void NullAlias()

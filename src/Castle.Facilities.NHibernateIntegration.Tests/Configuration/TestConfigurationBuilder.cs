@@ -17,12 +17,11 @@
 
 #endregion
 
-namespace Castle.Facilities.NHibernateIntegration.Tests
+namespace Castle.Facilities.NHibernateIntegration.Tests.Configuration
 {
 	using System.Configuration;
-	using Builders;
-	using Core.Configuration;
-	using Configuration = NHibernate.Cfg.Configuration;
+	using Castle.Facilities.NHibernateIntegration.Builders;
+	using Castle.Core.Configuration;
 
 	public class TestConfigurationBuilder : IConfigurationBuilder
 	{
@@ -35,9 +34,9 @@ namespace Castle.Facilities.NHibernateIntegration.Tests
 
 		#region IConfigurationBuilder Members
 
-		public Configuration GetConfiguration(IConfiguration config)
+		public NHibernate.Cfg.Configuration GetConfiguration(IConfiguration config)
 		{
-			Configuration nhConfig = defaultConfigurationBuilder.GetConfiguration(config);
+			var nhConfig = defaultConfigurationBuilder.GetConfiguration(config);
 			nhConfig.Properties["dialect"] = ConfigurationManager.AppSettings["nhf.dialect"];
 			nhConfig.Properties["connection.driver_class"] = ConfigurationManager.AppSettings["nhf.connection.driver_class"];
 			nhConfig.Properties["connection.provider"] = ConfigurationManager.AppSettings["nhf.connection.provider"];
