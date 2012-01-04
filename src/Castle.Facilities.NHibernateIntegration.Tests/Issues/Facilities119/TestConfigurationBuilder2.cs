@@ -28,7 +28,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities119
 
 		public NHibernate.Cfg.Configuration GetConfiguration(IConfiguration config)
 		{
-			Configuration cfg = new Configuration();
+			var cfg = new Configuration();
 			cfg.SetProperty("test", "test2");
 			return cfg;
 		}

@@ -22,11 +22,8 @@ namespace Castle.Facilities.NHibernateIntegration.Components.Dao
 	using System;
 	using System.Collections;
 	using NHibernate;
-	using NHibernate.Collection;
 	using NHibernate.Criterion;
 	using NHibernate.Exceptions;
-	using NHibernate.Proxy;
-	using Util;
 
 	/// <summary>
 	/// Summary description for GenericDao.
@@ -37,7 +34,7 @@ namespace Castle.Facilities.NHibernateIntegration.Components.Dao
 	public class NHibernateGenericDao
 	{
 		private readonly ISessionManager sessionManager;
-		private string sessionFactoryAlias = null;
+		private string sessionFactoryAlias;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NHibernateGenericDao"/> class.
@@ -191,7 +188,7 @@ namespace Castle.Facilities.NHibernateIntegration.Components.Dao
 		/// <param name="instance">The instance to be deleted from the database</param>
 		public virtual void Delete(object instance)
 		{
-			using (ISession session = this.GetSession())
+			using (ISession session = GetSession())
 			{
 				try
 				{
@@ -266,7 +263,7 @@ namespace Castle.Facilities.NHibernateIntegration.Components.Dao
 		/// <returns>The <see cref="Array"/> of results</returns>
 		public virtual Array FindAllStateless(Type type, int firstRow, int maxRows)
 		{
-			IStatelessSession session = this.GetStatelessSession();
+			IStatelessSession session = GetStatelessSession();
 			{
 				try
 				{
@@ -296,7 +293,7 @@ namespace Castle.Facilities.NHibernateIntegration.Components.Dao
 		/// <returns>The object instance.</returns>
 		public object FindByIdStateless(Type type, object id)
 		{
-			using (IStatelessSession session = this.GetStatelessSession())
+			using (IStatelessSession session = GetStatelessSession())
 			{
 				try
 				{
@@ -358,7 +355,7 @@ namespace Castle.Facilities.NHibernateIntegration.Components.Dao
 		/// <param name="instance">The instance to be deleted from the database</param>
 		public void DeleteStateless(object instance)
 		{
-			using (IStatelessSession session = this.GetStatelessSession())
+			using (IStatelessSession session = GetStatelessSession())
 			{
 				try
 				{
@@ -548,7 +545,7 @@ namespace Castle.Facilities.NHibernateIntegration.Components.Dao
 		{
 			if (string.IsNullOrEmpty(namedQuery)) throw new ArgumentNullException("namedQuery");
 
-			using (ISession session = this.GetSession())
+			using (ISession session = GetSession())
 			{
 				try
 				{
@@ -727,7 +724,7 @@ namespace Castle.Facilities.NHibernateIntegration.Components.Dao
 		{
 			if (string.IsNullOrEmpty(namedQuery)) throw new ArgumentNullException("namedQuery");
 
-			using (IStatelessSession session = this.GetStatelessSession())
+			using (IStatelessSession session = GetStatelessSession())
 			{
 				try
 				{

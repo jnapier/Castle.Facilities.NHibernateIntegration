@@ -22,9 +22,9 @@ namespace Castle.Facilities.NHibernateIntegration.Builders
 	using System.Collections.Generic;
 	using System.Text.RegularExpressions;
 	using Core.Configuration;
-	using log4net;
 	using NHibernate.Cfg;
 	using Persisters;
+	using log4net;
 
 	/// <summary>
 	/// Serializes the Configuration for subsequent initializations.

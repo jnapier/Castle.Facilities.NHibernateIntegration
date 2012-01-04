@@ -34,7 +34,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.SessionCreation
 		[Test]
 		public void SessionIsShared()
 		{
-			MyDao dao = container.Resolve<MyDao>();
+			var dao = container.Resolve<MyDao>();
 
 			dao.PerformComplexOperation1();
 		}
@@ -42,7 +42,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.SessionCreation
 		[Test]
 		public void SessionDisposedIsNotReused()
 		{
-			MyDao dao = container.Resolve<MyDao>();
+			var dao = container.Resolve<MyDao>();
 
 			dao.PerformComplexOperation2();
 		}
@@ -50,7 +50,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.SessionCreation
 		[Test]
 		public void ClosingAndDisposing()
 		{
-			MyDao dao = container.Resolve<MyDao>();
+			var dao = container.Resolve<MyDao>();
 
 			dao.DoOpenCloseAndDispose();
 		}
@@ -58,7 +58,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.SessionCreation
 		[Test]
 		public void StatelessSessionIsShared()
 		{
-			MyDao dao = container.Resolve<MyDao>();
+			var dao = container.Resolve<MyDao>();
 
 			dao.PerformStatelessComplexOperation1();
 		}
@@ -66,7 +66,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.SessionCreation
 		[Test]
 		public void StatelessSessionDisposedIsNotReused()
 		{
-			MyDao dao = container.Resolve<MyDao>();
+			var dao = container.Resolve<MyDao>();
 
 			dao.PerformStatelessComplexOperation2();
 		}
@@ -74,7 +74,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.SessionCreation
 		[Test]
 		public void StatelessSessionClosingAndDisposing()
 		{
-			MyDao dao = container.Resolve<MyDao>();
+			var dao = container.Resolve<MyDao>();
 
 			dao.DoStatelessOpenCloseAndDispose();
 		}

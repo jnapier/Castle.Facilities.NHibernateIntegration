@@ -42,7 +42,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void TestTransactionUsingDetachedCriteria()
 		{
-			RootService service = container.Resolve<RootService>();
+			var service = container.Resolve<RootService>();
 
 			string blogName = "Delicious Food!";
 
@@ -58,7 +58,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void TestTransactionStatelessUsingDetachedCriteria()
 		{
-			RootService service = container.Resolve<RootService>();
+			var service = container.Resolve<RootService>();
 
 			string blogName = "Delicious Food!";
 
@@ -74,8 +74,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void TestTransaction()
 		{
-			RootService service = container.Resolve<RootService>();
-			FirstDao dao = container.Resolve<FirstDao>("myfirstdao");
+			var service = container.Resolve<RootService>();
+			var dao = container.Resolve<FirstDao>("myfirstdao");
 
 			Blog blog = dao.Create("Blog1");
 
@@ -95,7 +95,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void TransactionNotHijackingTheSession()
 		{
-			ISessionManager sessionManager = container.Resolve<ISessionManager>();
+			var sessionManager = container.Resolve<ISessionManager>();
 
 			ITransaction transaction;
 
@@ -105,14 +105,14 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 
 				Assert.IsFalse(transaction.IsActive);
 
-				FirstDao service = container.Resolve<FirstDao>("myfirstdao");
+				var service = container.Resolve<FirstDao>("myfirstdao");
 
 				// This call is transactional
 				Blog blog = service.Create();
 
 				Assert.IsFalse(transaction.IsActive);
 
-				RootService rootService = container.Resolve<RootService>();
+				var rootService = container.Resolve<RootService>();
 
 				Array blogs = rootService.FindAll(typeof (Blog));
 				Assert.AreEqual(1, blogs.Length);
@@ -124,7 +124,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void SessionBeingSharedByMultipleTransactionsInSequence()
 		{
-			ISessionManager sessionManager = container.Resolve<ISessionManager>();
+			var sessionManager = container.Resolve<ISessionManager>();
 
 			ITransaction transaction;
 
@@ -133,7 +133,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 				transaction = session.Transaction;
 				Assert.IsFalse(transaction.IsActive);
 
-				FirstDao service = container.Resolve<FirstDao>("myfirstdao");
+				var service = container.Resolve<FirstDao>("myfirstdao");
 
 				// This call is transactional
 				service.Create();
@@ -144,7 +144,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 				// This call is transactional
 				service.Create("game cube's blogs");
 
-				RootService rootService = container.Resolve<RootService>();
+				var rootService = container.Resolve<RootService>();
 
 				Array blogs = rootService.FindAll(typeof (Blog));
 				Assert.AreEqual(3, blogs.Length);
@@ -156,7 +156,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void NonTransactionalRoot()
 		{
-			ISessionManager sessionManager = container.Resolve<ISessionManager>();
+			var sessionManager = container.Resolve<ISessionManager>();
 
 			ITransaction transaction;
 
@@ -166,8 +166,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 
 				Assert.IsFalse(transaction.IsActive);
 
-				FirstDao first = container.Resolve<FirstDao>("myfirstdao");
-				SecondDao second = container.Resolve<SecondDao>("myseconddao");
+				var first = container.Resolve<FirstDao>("myfirstdao");
+				var second = container.Resolve<SecondDao>("myseconddao");
 
 				// This call is transactional
 				Blog blog = first.Create();
@@ -187,7 +187,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 				// TODO: Assert transaction was rolledback
 				// Assert.IsTrue(session.Transaction.WasRolledBack);
 
-				RootService rootService = container.Resolve<RootService>();
+				var rootService = container.Resolve<RootService>();
 
 				Array blogs = rootService.FindAll(typeof (Blog));
 				Assert.AreEqual(1, blogs.Length);
@@ -199,7 +199,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void SimpleAndSucessfulSituationUsingRootTransactionBoundary()
 		{
-			RootService service = container.Resolve<RootService>();
+			var service = container.Resolve<RootService>();
 
 			service.SuccessFullCall();
 
@@ -215,7 +215,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void CallWithException()
 		{
-			RootService service = container.Resolve<RootService>();
+			var service = container.Resolve<RootService>();
 
 			try
 			{
@@ -237,7 +237,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void CallWithException2()
 		{
-			RootService service = container.Resolve<RootService>();
+			var service = container.Resolve<RootService>();
 
 			try
 			{
@@ -259,8 +259,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void TestTransactionStateless()
 		{
-			RootService service = container.Resolve<RootService>();
-			FirstDao dao = container.Resolve<FirstDao>("myfirstdao");
+			var service = container.Resolve<RootService>();
+			var dao = container.Resolve<FirstDao>("myfirstdao");
 
 			Blog blog = dao.CreateStateless("Blog1");
 
@@ -280,7 +280,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void TransactionNotHijackingTheStatelessSession()
 		{
-			ISessionManager sessionManager = container.Resolve<ISessionManager>();
+			var sessionManager = container.Resolve<ISessionManager>();
 
 			ITransaction transaction;
 
@@ -290,12 +290,12 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 
 				Assert.IsFalse(transaction.IsActive);
 
-				FirstDao service = container.Resolve<FirstDao>("myfirstdao");
+				var service = container.Resolve<FirstDao>("myfirstdao");
 
 				// This call is transactional
 				Blog blog = service.CreateStateless();
 
-				RootService rootService = container.Resolve<RootService>();
+				var rootService = container.Resolve<RootService>();
 
 				Array blogs = rootService.FindAllStateless(typeof(Blog));
 				Assert.AreEqual(1, blogs.Length);
@@ -307,7 +307,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void SessionBeingSharedByMultipleTransactionsInSequenceStateless()
 		{
-			ISessionManager sessionManager = container.Resolve<ISessionManager>();
+			var sessionManager = container.Resolve<ISessionManager>();
 
 			ITransaction transaction;
 
@@ -316,7 +316,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 				transaction = session.Transaction;
 				Assert.IsFalse(transaction.IsActive);
 
-				FirstDao service = container.Resolve<FirstDao>("myfirstdao");
+				var service = container.Resolve<FirstDao>("myfirstdao");
 
 				// This call is transactional
 				service.CreateStateless();
@@ -327,7 +327,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 				// This call is transactional
 				service.CreateStateless("game cube's blogs");
 
-				RootService rootService = container.Resolve<RootService>();
+				var rootService = container.Resolve<RootService>();
 
 				Array blogs = rootService.FindAllStateless(typeof(Blog));
 				Assert.AreEqual(3, blogs.Length);
@@ -339,7 +339,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void NonTransactionalRootStateless()
 		{
-			ISessionManager sessionManager = container.Resolve<ISessionManager>();
+			var sessionManager = container.Resolve<ISessionManager>();
 
 			ITransaction transaction;
 
@@ -349,8 +349,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 
 				Assert.IsFalse(transaction.IsActive);
 
-				FirstDao first = container.Resolve<FirstDao>("myfirstdao");
-				SecondDao second = container.Resolve<SecondDao>("myseconddao");
+				var first = container.Resolve<FirstDao>("myfirstdao");
+				var second = container.Resolve<SecondDao>("myseconddao");
 
 				// This call is transactional
 				Blog blog = first.CreateStateless();
@@ -370,7 +370,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 				// TODO: Assert transaction was rolledback
 				// Assert.IsTrue(session.Transaction.WasRolledBack);
 
-				RootService rootService = container.Resolve<RootService>();
+				var rootService = container.Resolve<RootService>();
 
 				Array blogs = rootService.FindAllStateless(typeof(Blog));
 				Assert.AreEqual(1, blogs.Length);
@@ -382,7 +382,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void SimpleAndSucessfulSituationUsingRootTransactionBoundaryStateless()
 		{
-			RootService service = container.Resolve<RootService>();
+			var service = container.Resolve<RootService>();
 
 			service.SuccessFullCallStateless();
 
@@ -398,7 +398,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void CallWithExceptionStateless()
 		{
-			RootService service = container.Resolve<RootService>();
+			var service = container.Resolve<RootService>();
 
 			try
 			{
@@ -420,7 +420,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void CallWithExceptionStateless2()
 		{
-			RootService service = container.Resolve<RootService>();
+			var service = container.Resolve<RootService>();
 
 			try
 			{

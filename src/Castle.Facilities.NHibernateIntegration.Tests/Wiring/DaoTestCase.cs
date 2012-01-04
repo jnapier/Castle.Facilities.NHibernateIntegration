@@ -33,7 +33,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Wiring
 		[Test]
 		public void NHComponentsAvailableToWire()
 		{
-			MyDao dao = container.Resolve<MyDao>();
+			var dao = container.Resolve<MyDao>();
 
 			Assert.IsNotNull(dao);
 			Assert.IsNotNull(dao.Cfg);

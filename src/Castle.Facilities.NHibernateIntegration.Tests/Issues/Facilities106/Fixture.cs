@@ -37,7 +37,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities106
 			IConfiguration castleConfiguration = new MutableConfiguration("myConfig");
 			castleConfiguration.Attributes["nhibernateConfigFile"] =
 				@"Castle.Facilities.NHibernateIntegration.Tests/Issues/Facilities106/factory1.xml";
-			XmlConfigurationBuilder b = new XmlConfigurationBuilder();
+			var b = new XmlConfigurationBuilder();
 			NHibernate.Cfg.Configuration cfg = b.GetConfiguration(castleConfiguration);
 			Assert.IsNotNull(cfg);
 			string str = cfg.Properties["connection.provider"];

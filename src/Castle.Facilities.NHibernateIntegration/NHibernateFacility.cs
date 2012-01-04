@@ -34,8 +34,6 @@ namespace Castle.Facilities.NHibernateIntegration
 	using NHibernate;
 	using Services.Transaction;
 	using SessionStores;
-	using IInterceptor = NHibernate.IInterceptor;
-	using ILogger = Core.Logging.ILogger;
 	using ILoggerFactory = Core.Logging.ILoggerFactory;
 
 	/// <summary>
@@ -98,7 +96,7 @@ namespace Castle.Facilities.NHibernateIntegration
 
 		private ILogger log = NullLogger.Instance;
 	    private Type customConfigurationBuilderType;
-	    private NHibernateFacilityConfiguration facilitySettingConfig;
+	    private readonly NHibernateFacilityConfiguration facilitySettingConfig;
 
 	    /// <summary>
 		/// Instantiates the facility with the specified configuration builder.
@@ -212,7 +210,7 @@ namespace Castle.Facilities.NHibernateIntegration
 
 			if (!string.IsNullOrEmpty(defaultFlushMode))
 			{
-				MutableConfiguration confignode = new MutableConfiguration(SessionManagerKey);
+				var confignode = new MutableConfiguration(SessionManagerKey);
 
 				IConfiguration properties = new MutableConfiguration("parameters");
 				confignode.Children.Add(properties);
@@ -247,7 +245,7 @@ namespace Castle.Facilities.NHibernateIntegration
 		/// </summary>
         protected void ConfigureFacility()
 		{
-		    ISessionFactoryResolver sessionFactoryResolver = Kernel.Resolve<ISessionFactoryResolver>();
+		    var sessionFactoryResolver = Kernel.Resolve<ISessionFactoryResolver>();
 
 		    ConfigureReflectionOptimizer();
 

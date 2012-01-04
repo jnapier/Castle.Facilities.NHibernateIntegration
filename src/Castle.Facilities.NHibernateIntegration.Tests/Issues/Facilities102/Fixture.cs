@@ -28,7 +28,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities102
 		[Test]
 		public void HasAliassedSessionHasFlushModeSet()
 		{
-			ISessionManager manager = container.Resolve<ISessionManager>();
+			var manager = container.Resolve<ISessionManager>();
 			FlushMode previous = manager.DefaultFlushMode;
 			manager.DefaultFlushMode = (FlushMode) 100;
 			ISession session = manager.OpenSession("intercepted");
@@ -39,7 +39,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities102
 		[Test]
 		public void SessionHasFlushModeSet()
 		{
-			ISessionManager manager = container.Resolve<ISessionManager>();
+			var manager = container.Resolve<ISessionManager>();
 			FlushMode previous = manager.DefaultFlushMode;
 			manager.DefaultFlushMode = (FlushMode) 100;
 			ISession session = manager.OpenSession();

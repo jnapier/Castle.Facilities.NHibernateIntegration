@@ -66,7 +66,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities116
 			Assert.IsFalse(File.Exists(filename));
 			configurationBuilder.GetConfiguration(configuration);
 			Assert.IsTrue(File.Exists(filename));
-			BinaryFormatter bf = new BinaryFormatter();
+			var bf = new BinaryFormatter();
 			Configuration nhConfig;
 			using (var fileStream = new FileStream(filename, FileMode.Open))
 			{

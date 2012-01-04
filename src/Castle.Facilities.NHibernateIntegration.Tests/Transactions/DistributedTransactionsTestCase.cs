@@ -20,7 +20,6 @@
 namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 {
 	using System;
-	using AutoTx;
 	using MicroKernel.Registration;
 	using NUnit.Framework;
 
@@ -43,8 +42,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void SuccessfulSituationWithTwoDatabases()
 		{
-			RootService2 service = container.Resolve<RootService2>();
-			OrderDao2 orderDao = container.Resolve<OrderDao2>("myorderdao");
+			var service = container.Resolve<RootService2>();
+			var orderDao = container.Resolve<OrderDao2>("myorderdao");
 
 			service.DoTwoDBOperation_Create(false);
 
@@ -63,8 +62,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void ExceptionOnEndWithTwoDatabases()
 		{
-			RootService2 service = container.Resolve<RootService2>();
-			OrderDao2 orderDao = container.Resolve<OrderDao2>("myorderdao");
+			var service = container.Resolve<RootService2>();
+			var orderDao = container.Resolve<OrderDao2>("myorderdao");
 
 			try
 			{
@@ -90,8 +89,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void SuccessfulSituationWithTwoDatabasesStateless()
 		{
-			RootService2 service = container.Resolve<RootService2>();
-			OrderDao2 orderDao = container.Resolve<OrderDao2>("myorderdao");
+			var service = container.Resolve<RootService2>();
+			var orderDao = container.Resolve<OrderDao2>("myorderdao");
 
 			try
 			{
@@ -119,8 +118,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void ExceptionOnEndWithTwoDatabasesStateless()
 		{
-			RootService2 service = container.Resolve<RootService2>();
-			OrderDao2 orderDao = container.Resolve<OrderDao2>("myorderdao");
+			var service = container.Resolve<RootService2>();
+			var orderDao = container.Resolve<OrderDao2>("myorderdao");
 
 			try
 			{

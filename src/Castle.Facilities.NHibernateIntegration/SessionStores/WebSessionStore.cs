@@ -19,7 +19,6 @@
 
 namespace Castle.Facilities.NHibernateIntegration.SessionStores
 {
-	using System;
 	using System.Collections;
 	using System.Web;
 	using MicroKernel.Facilities;
@@ -60,7 +59,7 @@ namespace Castle.Facilities.NHibernateIntegration.SessionStores
 		{
 			HttpContext currentContext = ObtainSessionContext();
 
-			return currentContext.Items[this.StatelessSessionSlotKey] as IDictionary;
+			return currentContext.Items[StatelessSessionSlotKey] as IDictionary;
 		}
 
 		/// <summary>
@@ -71,7 +70,7 @@ namespace Castle.Facilities.NHibernateIntegration.SessionStores
 		{
 			HttpContext currentContext = ObtainSessionContext();
 
-			currentContext.Items[this.StatelessSessionSlotKey] = dictionary;
+			currentContext.Items[StatelessSessionSlotKey] = dictionary;
 		}
 
 		private static HttpContext ObtainSessionContext()

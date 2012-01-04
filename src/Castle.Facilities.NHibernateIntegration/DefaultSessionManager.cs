@@ -20,15 +20,12 @@
 namespace Castle.Facilities.NHibernateIntegration
 {
 	using System;
-	using System.Collections.Generic;
-	using System.Transactions;
-	using Internal;
+	using System.Data;
 	using MicroKernel;
 	using MicroKernel.Facilities;
 	using NHibernate;
 	using Services.Transaction;
 	using ITransaction = Services.Transaction.ITransaction;
-	using IsolationLevel = System.Data.IsolationLevel;
 
 	/// <summary>
 	/// 
@@ -124,7 +121,7 @@ namespace Castle.Facilities.NHibernateIntegration
 		/// <returns></returns>
 		public IStatelessSession OpenStatelessSession()
 		{
-			return this.OpenStatelessSession(Constants.DefaultAlias);
+			return OpenStatelessSession(Constants.DefaultAlias);
 
 		}
 
@@ -228,7 +225,7 @@ namespace Castle.Facilities.NHibernateIntegration
 
 		private ITransaction ObtainCurrentTransaction()
 		{
-			ITransactionManager transactionManager = kernel.Resolve<ITransactionManager>();
+			var transactionManager = kernel.Resolve<ITransactionManager>();
 
 			return transactionManager.CurrentTransaction.HasValue ? transactionManager.CurrentTransaction.Value : null;
 		}
@@ -259,13 +256,13 @@ namespace Castle.Facilities.NHibernateIntegration
 
 			if (kernel.HasComponent(aliasedInterceptorId))
 			{
-				IInterceptor interceptor = kernel.Resolve<IInterceptor>(aliasedInterceptorId);
+				var interceptor = kernel.Resolve<IInterceptor>(aliasedInterceptorId);
 
 				session = sessionFactory.OpenSession(interceptor);
 			}
 			else if (kernel.HasComponent(InterceptorName))
 			{
-				IInterceptor interceptor = kernel.Resolve<IInterceptor>(InterceptorName);
+				var interceptor = kernel.Resolve<IInterceptor>(InterceptorName);
 
 				session = sessionFactory.OpenSession(interceptor);
 			}

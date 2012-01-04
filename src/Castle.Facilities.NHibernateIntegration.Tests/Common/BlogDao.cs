@@ -39,7 +39,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests
 		{
 			using (ISession session = sessManager.OpenSession())
 			{
-				Blog blog = new Blog();
+				var blog = new Blog();
 				blog.Name = name;
 				blog.Items = new ArrayList();
 

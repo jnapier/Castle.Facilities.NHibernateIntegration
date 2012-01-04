@@ -21,7 +21,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests
 {
 	using AutoTx;
 	using Core.Resource;
-	using NHibernate.Cfg;
 	using NHibernate.Tool.hbm2ddl;
 	using NUnit.Framework;
 	using Windsor;
@@ -30,10 +29,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests
 	public abstract class AbstractNHibernateTestCase
 	{
 		protected IWindsorContainer container;
-
-		public AbstractNHibernateTestCase()
-		{
-		}
 
 		protected virtual string ConfigurationFile
 		{
@@ -45,7 +40,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests
 			NHibernate.Cfg.Configuration[] cfgs = container.ResolveAll<NHibernate.Cfg.Configuration>();
 			foreach (var cfg in cfgs)
 			{
-				SchemaExport export = new SchemaExport(cfg);
+				var export = new SchemaExport(cfg);
 				export.Create(false, true);
 			}
 		}
@@ -55,7 +50,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests
 			var cfgs = container.ResolveAll<NHibernate.Cfg.Configuration>();
 			foreach (var cfg in cfgs)
 			{
-				SchemaExport export = new SchemaExport(cfg);
+				var export = new SchemaExport(cfg);
 				export.Drop(false, true);
 			}
 		}

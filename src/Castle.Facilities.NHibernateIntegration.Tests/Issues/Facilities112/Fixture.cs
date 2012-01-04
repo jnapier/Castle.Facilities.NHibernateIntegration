@@ -20,10 +20,8 @@
 namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities112
 {
 	using System.Reflection;
-
-	using Castle.MicroKernel;
-
 	using Core;
+	using MicroKernel;
 	using MicroKernel.Handlers;
 	using MicroKernel.Lifestyle;
 	using NHibernate;

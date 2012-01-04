@@ -1,11 +1,10 @@
 namespace Castle.Facilities.NHibernateIntegration.Tests.Configuration
 {
 	using AutoTx;
-	using Castle.Core.Configuration;
-	using Castle.Facilities.NHibernateIntegration.SessionStores;
-	using Castle.MicroKernel.Facilities;
+	using Core.Configuration;
+	using MicroKernel.Facilities;
 	using NUnit.Framework;
-	using Castle.Windsor;
+	using Windsor;
 
 	[TestFixture]
     public class FacilityFluentConfigTestCase

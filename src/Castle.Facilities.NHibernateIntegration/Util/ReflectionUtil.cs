@@ -151,7 +151,7 @@ namespace Castle.Facilities.NHibernateIntegration.Util
 		/// </summary>
 		public static FieldInfoCollection GetFieldsWithAttribute(Type type, Type attribute)
 		{
-			FieldInfoCollection fields = new FieldInfoCollection();
+			var fields = new FieldInfoCollection();
 			foreach (FieldInfo field in type.GetFields())
 			{
 				if (field.GetCustomAttributes(attribute, true).Length > 0)
@@ -195,8 +195,8 @@ namespace Castle.Facilities.NHibernateIntegration.Util
 		{
 			if (!field.FieldType.IsArray)
 				throw new InvalidOperationException("Field's type is not an array!");
-			Array c = (Array) field.GetValue(instance);
-			ArrayList list = new ArrayList();
+			var c = (Array) field.GetValue(instance);
+			var list = new ArrayList();
 			if (c != null)
 				list.AddRange(c);
 			list.Add(val);
@@ -208,7 +208,7 @@ namespace Castle.Facilities.NHibernateIntegration.Util
 		/// </summary>
 		public static FieldInfoCollection GetFieldsWithOutAttributes(Type type, params Type[] types)
 		{
-			FieldInfoCollection fields = new FieldInfoCollection();
+			var fields = new FieldInfoCollection();
 
 			bool match;
 			foreach (FieldInfo field in type.GetFields())
@@ -272,8 +272,8 @@ namespace Castle.Facilities.NHibernateIntegration.Util
 		/// <param name="index">The index.</param>
 		public static void RemoveFromArray(FieldInfo field, object instance, int index)
 		{
-			Array c = (Array) field.GetValue(instance);
-			ArrayList list = new ArrayList(c.Length - 1);
+			var c = (Array) field.GetValue(instance);
+			var list = new ArrayList(c.Length - 1);
 			for (int i = 0; i < c.Length; i++)
 			{
 				if (i != index)
@@ -321,7 +321,7 @@ namespace Castle.Facilities.NHibernateIntegration.Util
 		public static IDictionary GetPropertiesDictionary(object obj)
 		{
 			object propertyValue = null;
-			Hashtable ht = new Hashtable();
+			var ht = new Hashtable();
 			foreach (PropertyInfo property in obj.GetType().
 				GetProperties(BindingFlags.Instance |
 				              BindingFlags.GetProperty | BindingFlags.Public |
@@ -349,7 +349,7 @@ namespace Castle.Facilities.NHibernateIntegration.Util
 		/// </summary>
 		public static IDictionary GetFieldsDictionary(object obj)
 		{
-			Hashtable ht = new Hashtable();
+			var ht = new Hashtable();
 			foreach (FieldInfo field in obj.GetType().GetFields())
 			{
 				if (ReflectionUtil.IsSimpleType(field.FieldType))
@@ -368,10 +368,10 @@ namespace Castle.Facilities.NHibernateIntegration.Util
 		{
 			if (value == null)
 				return false;
-			ICollection c = value as ICollection;
+			var c = value as ICollection;
 			if (c != null)
 				return c.Count > 0;
-			string s = value as string;
+			var s = value as string;
 			if (s != null)
 				return s.Length > 0;
 			return true;

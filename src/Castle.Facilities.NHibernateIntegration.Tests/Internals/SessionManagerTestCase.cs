@@ -39,7 +39,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
 		[Test]
 		public void TwoDatabases()
 		{
-			ISessionManager manager = container.Resolve<ISessionManager>();
+			var manager = container.Resolve<ISessionManager>();
 
 			ISession session1 = manager.OpenSession();
 			ISession session2 = manager.OpenSession("db2");
@@ -58,12 +58,12 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
 		[Test]
 		public void NonInterceptedSession()
 		{
-			ISessionManager manager = container.Resolve<ISessionManager>();
+			var manager = container.Resolve<ISessionManager>();
 
 			string sessionAlias = "db2";
 
 			ISession session = manager.OpenSession(sessionAlias);
-			Order o = new Order();
+			var o = new Order();
 			o.Value = 9.3f;
 			session.SaveOrUpdate(o);
 			session.Close();
@@ -72,7 +72,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
 			session.Get(typeof (Order), 1);
 			session.Close();
 
-			TestInterceptor interceptor = container.Resolve<TestInterceptor>("nhibernate.session.interceptor.intercepted");
+			var interceptor = container.Resolve<TestInterceptor>("nhibernate.session.interceptor.intercepted");
 			Assert.IsNotNull(interceptor);
 			Assert.IsFalse(interceptor.ConfirmOnSaveCall());
 			Assert.IsFalse(interceptor.ConfirmInstantiationCall());
@@ -82,12 +82,12 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
 		[Test]
 		public void InterceptedSessionByConfiguration()
 		{
-			ISessionManager manager = container.Resolve<ISessionManager>();
+			var manager = container.Resolve<ISessionManager>();
 
 			string sessionAlias = "intercepted";
 
 			ISession session = manager.OpenSession(sessionAlias);
-			Order o = new Order();
+			var o = new Order();
 			o.Value = 9.3f;
 			session.SaveOrUpdate(o);
 			session.Close();
@@ -96,7 +96,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
 			session.Get(typeof (Order), 1);
 			session.Close();
 
-			TestInterceptor interceptor = container.Resolve<TestInterceptor>("nhibernate.session.interceptor.intercepted");
+			var interceptor = container.Resolve<TestInterceptor>("nhibernate.session.interceptor.intercepted");
 			Assert.IsNotNull(interceptor);
 			Assert.IsTrue(interceptor.ConfirmOnSaveCall());
 			Assert.IsTrue(interceptor.ConfirmInstantiationCall());
@@ -106,7 +106,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
 		[Test]
 		public void NonExistentAlias()
 		{
-			ISessionManager manager = container.Resolve<ISessionManager>();
+			var manager = container.Resolve<ISessionManager>();
 
 			Assert.Throws<FacilityException>(() => manager.OpenSession("something in the way she moves"));
 		}
@@ -114,7 +114,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
 		[Test]
 		public void SharedSession()
 		{
-			ISessionManager manager = container.Resolve<ISessionManager>();
+			var manager = container.Resolve<ISessionManager>();
 
 			ISession session1 = manager.OpenSession();
 			ISession session2 = manager.OpenSession();
@@ -137,7 +137,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
 		[Test]
 		public void TwoDatabasesStateless()
 		{
-			ISessionManager manager = container.Resolve<ISessionManager>();
+			var manager = container.Resolve<ISessionManager>();
 
 			IStatelessSession session1 = manager.OpenStatelessSession();
 			IStatelessSession session2 = manager.OpenStatelessSession("db2");
@@ -156,7 +156,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
 		[Test]
 		public void NonExistentAliasStateless()
 		{
-			ISessionManager manager = container.Resolve<ISessionManager>();
+			var manager = container.Resolve<ISessionManager>();
 
 			Assert.Throws<FacilityException>(() => manager.OpenStatelessSession("something in the way she moves"));
 		}
@@ -164,7 +164,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Internals
 		[Test]
 		public void SharedStatelessSession()
 		{
-			ISessionManager manager = container.Resolve<ISessionManager>();
+			var manager = container.Resolve<ISessionManager>();
 
 			IStatelessSession session1 = manager.OpenStatelessSession();
 			IStatelessSession session2 = manager.OpenStatelessSession();

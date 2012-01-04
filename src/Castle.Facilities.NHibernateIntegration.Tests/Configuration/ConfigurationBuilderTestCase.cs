@@ -19,7 +19,7 @@
 
 namespace Castle.Facilities.NHibernateIntegration.Tests.Configuration
 {
-	using Castle.Facilities.NHibernateIntegration.Tests.Common;
+	using Common;
 	using NHibernate.Cfg;
 	using NUnit.Framework;
 
@@ -34,7 +34,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Configuration
 		[Test]
 		public void SaveUpdateListenerAdded()
 		{
-			Configuration cfg = container.Resolve<Configuration>("sessionFactory4.cfg");
+			var cfg = container.Resolve<Configuration>("sessionFactory4.cfg");
 			Assert.AreEqual(1, cfg.EventListeners.SaveOrUpdateEventListeners.Length);
 			Assert.AreEqual(typeof (CustomSaveUpdateListener), cfg.EventListeners.SaveOrUpdateEventListeners[0].GetType());
 

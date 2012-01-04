@@ -1,12 +1,12 @@
-using Castle.Core.Resource;
-using Castle.Facilities.NHibernateIntegration.SessionStores;
-using Castle.Windsor;
-using Castle.Windsor.Configuration.Interpreters;
-using NUnit.Framework;
-
 namespace Castle.Facilities.NHibernateIntegration.Tests.Issues.Facilities152
 {
-    [TestFixture]
+	using Core.Resource;
+	using NUnit.Framework;
+	using SessionStores;
+	using Windsor;
+	using Windsor.Configuration.Interpreters;
+
+	[TestFixture]
     public class Fixture
     {
         [Test]

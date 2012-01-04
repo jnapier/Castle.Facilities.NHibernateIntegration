@@ -280,7 +280,7 @@
 		}
 
 		/// <summary>
-		/// Gets a <see cref="Boolean"/> indicating if the transaction was rolled back.
+		/// Gets a <see cref="bool"/> indicating if the transaction was rolled back.
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if the <see cref="IDbTransaction"/> had <c>Rollback</c> called
@@ -292,7 +292,7 @@
 		}
 
 		/// <summary>
-		/// Gets a <see cref="Boolean"/> indicating if the transaction was committed.
+		/// Gets a <see cref="bool"/> indicating if the transaction was committed.
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if the <see cref="IDbTransaction"/> had <c>Commit</c> called
@@ -329,7 +329,7 @@
 		/// </summary>
 		private bool _isAlreadyDisposed;
 
-		private Guid sessionId;
+		private readonly Guid sessionId;
 
 		/// <summary>
 		/// Finalizer that ensures the object is correctly disposed of.

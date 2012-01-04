@@ -21,10 +21,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests
 {
 	public class Order
 	{
-		public Order()
-		{
-		}
-
 		public virtual int Id { get; set; }
 
 		public virtual float Value { get; set; }

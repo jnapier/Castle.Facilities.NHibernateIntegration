@@ -1393,8 +1393,8 @@ namespace Castle.Facilities.NHibernateIntegration
 		/// <returns></returns>
 		public static bool AreEqual(ISession left, ISession right)
 		{
-			SessionDelegate sdLeft = left as SessionDelegate;
-			SessionDelegate sdRight = right as SessionDelegate;
+			var sdLeft = left as SessionDelegate;
+			var sdRight = right as SessionDelegate;
 
 			if (sdLeft != null && sdRight != null)
 			{

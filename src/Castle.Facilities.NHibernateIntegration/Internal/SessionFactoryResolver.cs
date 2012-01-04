@@ -89,7 +89,7 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 		/// </exception>
 		public ISessionFactory GetSessionFactory(String alias)
 		{
-			String componentKey = alias2Key[alias] as String;
+			var componentKey = alias2Key[alias] as String;
 
 			if (componentKey == null)
 			{

@@ -39,7 +39,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsNotNull(session.Transaction);
 
-				Order order = new Order();
+				var order = new Order();
 				order.Value = val;
 				session.Save(order);
 
@@ -67,7 +67,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsNotNull(session.Transaction);
 
-				Order order = (Order) session.Load(typeof (Order), orderId);
+				var order = (Order) session.Load(typeof (Order), orderId);
 
 				session.Delete(order);
 			}
@@ -80,7 +80,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsNotNull(session.Transaction);
 
-				Order order = new Order();
+				var order = new Order();
 				order.Value = val;
 				session.Insert(order);
 
@@ -108,7 +108,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsNotNull(session.Transaction);
 
-				Order order = (Order) session.Get(typeof(Order).FullName, orderId);
+				var order = (Order) session.Get(typeof(Order).FullName, orderId);
 
 				session.Delete(order);
 			}

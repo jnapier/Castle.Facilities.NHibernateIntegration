@@ -41,7 +41,7 @@ namespace Castle.Facilities.NHibernateIntegration.Builders
 		/// <returns></returns>
 		public virtual Configuration GetConfiguration(IConfiguration config)
 		{
-			Configuration cfg = new Configuration();
+			var cfg = new Configuration();
 
 			ApplyConfigurationSettings(cfg, config.Children["settings"]);
 			RegisterAssemblies(cfg, config.Children["assemblies"]);
@@ -115,7 +115,7 @@ namespace Castle.Facilities.NHibernateIntegration.Builders
 				//if (classType == null)
 				//    throw new ConfigurationErrorsException("The full type name of the listener class must be specified.");
 
-				ListenerType listenerType = (ListenerType) Enum.Parse(typeof (ListenerType), eventName);
+				var listenerType = (ListenerType) Enum.Parse(typeof (ListenerType), eventName);
 				object listenerInstance = Activator.CreateInstance(classType);
 
 				cfg.SetListener(listenerType, listenerInstance);

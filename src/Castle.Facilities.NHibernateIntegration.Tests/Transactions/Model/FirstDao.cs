@@ -45,7 +45,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsTrue(session.Transaction.IsActive);
 
-				Blog blog = new Blog();
+				var blog = new Blog();
 				blog.Name = name;
 				session.Save(blog);
 				return blog;
@@ -86,7 +86,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsTrue(session.Transaction.IsActive);
 
-				Blog blog = new Blog();
+				var blog = new Blog();
 				blog.Name = name;
 				session.Insert(blog);
 				return blog;

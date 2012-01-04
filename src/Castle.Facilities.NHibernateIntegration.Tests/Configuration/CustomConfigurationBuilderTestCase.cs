@@ -20,14 +20,14 @@
 namespace Castle.Facilities.NHibernateIntegration.Tests.Configuration
 {
 	using System.Configuration;
-	using Castle.Facilities.NHibernateIntegration.Builders;
-	using Castle.Core.Configuration;
-	using Castle.Core.Resource;
-	using Castle.MicroKernel.Facilities;
+	using Builders;
+	using Core.Configuration;
+	using Core.Resource;
+	using MicroKernel.Facilities;
 	using NHibernate;
 	using NUnit.Framework;
-	using Castle.Windsor;
-	using Castle.Windsor.Configuration.Interpreters;
+	using Windsor;
+	using Windsor.Configuration.Interpreters;
 	using Configuration = NHibernate.Cfg.Configuration;
 
 	public class CustomConfigurationBuilder : IConfigurationBuilder
@@ -76,7 +76,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Configuration
 		public void Invoked()
 		{
 			ISession session = container.Resolve<ISessionManager>().OpenSession();
-			CustomConfigurationBuilder configurationBuilder =
+			var configurationBuilder =
 				(CustomConfigurationBuilder) container.Resolve<IConfigurationBuilder>();
 			Assert.AreEqual(1, configurationBuilder.ConfigurationsCreated);
 			session.Close();

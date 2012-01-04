@@ -71,7 +71,7 @@ namespace Castle.Facilities.NHibernateIntegration.SessionStores
 		/// <param name="session"></param>
 		public void Remove(SessionDelegate session)
 		{
-			Stack stack = (Stack) session.SessionStoreCookie;
+			var stack = (Stack) session.SessionStoreCookie;
 
 			if (stack == null)
 			{
@@ -85,7 +85,7 @@ namespace Castle.Facilities.NHibernateIntegration.SessionStores
 				                                  "for an empty stack");
 			}
 
-			ISession current = stack.Peek() as ISession;
+			var current = stack.Peek() as ISession;
 
 			if (session != current)
 			{
@@ -154,7 +154,7 @@ namespace Castle.Facilities.NHibernateIntegration.SessionStores
 		/// <param name="session"></param>
 		public void Remove(StatelessSessionDelegate session)
 		{
-			Stack stack = (Stack) session.SessionStoreCookie;
+			var stack = (Stack) session.SessionStoreCookie;
 
 			if (stack == null)
 			{
@@ -168,7 +168,7 @@ namespace Castle.Facilities.NHibernateIntegration.SessionStores
 												  "for an empty stack");
 			}
 
-			IStatelessSession current = stack.Peek() as IStatelessSession;
+			var current = stack.Peek() as IStatelessSession;
 
 			if (session != current)
 			{

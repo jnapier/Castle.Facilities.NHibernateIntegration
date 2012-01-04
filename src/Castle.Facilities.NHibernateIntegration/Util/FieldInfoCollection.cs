@@ -1225,7 +1225,7 @@ namespace Castle.Facilities.NHibernateIntegration.Util
 		/// </remarks>
 		public virtual object Clone()
 		{
-			FieldInfoCollection clone = new FieldInfoCollection(_data.Count);
+			var clone = new FieldInfoCollection(_data.Count);
 
 			Array.Copy(_data.Items, 0, clone._data.Items, 0, _data.Count);
 			clone._data.Count = _data.Count;
@@ -2080,7 +2080,7 @@ namespace Castle.Facilities.NHibernateIntegration.Util
 		/// </remarks>
 		public FieldInfo[] ToArray()
 		{
-			FieldInfo[] array = new FieldInfo[_data.Count];
+			var array = new FieldInfo[_data.Count];
 			Array.Copy(_data.Items, array, _data.Count);
 			return array;
 		}
@@ -2221,7 +2221,7 @@ namespace Castle.Facilities.NHibernateIntegration.Util
 					return;
 				}
 
-				FieldInfo[] items = new FieldInfo[capacity];
+				var items = new FieldInfo[capacity];
 				Array.Copy(Items, items, Count);
 				Items = items;
 			}
@@ -2337,7 +2337,7 @@ namespace Castle.Facilities.NHibernateIntegration.Util
 
 			public override object Clone()
 			{
-				FieldInfoCollection wrapper = (FieldInfoCollection) base.Clone();
+				var wrapper = (FieldInfoCollection) base.Clone();
 
 				return new ReadOnlyWrapper(wrapper._data);
 			}

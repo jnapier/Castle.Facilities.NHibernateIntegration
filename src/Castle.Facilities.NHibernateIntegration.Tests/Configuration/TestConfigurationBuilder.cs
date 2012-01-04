@@ -20,8 +20,8 @@
 namespace Castle.Facilities.NHibernateIntegration.Tests.Configuration
 {
 	using System.Configuration;
-	using Castle.Facilities.NHibernateIntegration.Builders;
-	using Castle.Core.Configuration;
+	using Builders;
+	using Core.Configuration;
 
 	public class TestConfigurationBuilder : IConfigurationBuilder
 	{

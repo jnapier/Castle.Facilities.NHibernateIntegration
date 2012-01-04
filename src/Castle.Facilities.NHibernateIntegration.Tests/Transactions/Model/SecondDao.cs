@@ -39,7 +39,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsNotNull(session.Transaction);
 
-				BlogItem item = new BlogItem();
+				var item = new BlogItem();
 
 				item.ParentBlog = blog;
 				item.ItemDate = DateTime.Now;
@@ -59,7 +59,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsNotNull(session.Transaction);
 
-				BlogItem item = new BlogItem();
+				var item = new BlogItem();
 
 				item.ParentBlog = blog;
 				item.ItemDate = DateTime.Now;
@@ -77,7 +77,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsNotNull(session.Transaction);
 
-				BlogItem item = new BlogItem();
+				var item = new BlogItem();
 
 				item.ParentBlog = blog;
 				item.ItemDate = DateTime.Now;
@@ -97,7 +97,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsNotNull(session.Transaction);
 
-				BlogItem item = new BlogItem();
+				var item = new BlogItem();
 
 				item.ParentBlog = blog;
 				item.ItemDate = DateTime.Now;
@@ -117,7 +117,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsNotNull(session.Transaction);
 
-				BlogItem item = new BlogItem();
+				var item = new BlogItem();
 
 				item.ParentBlog = blog;
 				item.ItemDate = DateTime.Now;
@@ -135,7 +135,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsNotNull(session.Transaction);
 
-				BlogItem item = new BlogItem();
+				var item = new BlogItem();
 
 				item.ParentBlog = blog;
 				item.ItemDate = DateTime.Now;

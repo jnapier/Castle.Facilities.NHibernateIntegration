@@ -76,14 +76,14 @@ namespace Castle.Facilities.NHibernateIntegration.Components.Web
 		{
 			IWindsorContainer container = ObtainContainer();
 
-			ISessionManager sessManager = container.Resolve<ISessionManager>();
+			var sessManager = container.Resolve<ISessionManager>();
 
 			HttpContext.Current.Items.Add(SessionKey, sessManager.OpenSession());
 		}
 
 		private void OnEndRequest(object sender, EventArgs e)
 		{
-			ISession session = (ISession) HttpContext.Current.Items[SessionKey];
+			var session = (ISession) HttpContext.Current.Items[SessionKey];
 
 			if (session != null)
 			{
@@ -93,7 +93,7 @@ namespace Castle.Facilities.NHibernateIntegration.Components.Web
 
 		private static IWindsorContainer ObtainContainer()
 		{
-			IContainerAccessor containerAccessor =
+			var containerAccessor =
 				HttpContext.Current.ApplicationInstance as IContainerAccessor;
 
 			if (containerAccessor == null)

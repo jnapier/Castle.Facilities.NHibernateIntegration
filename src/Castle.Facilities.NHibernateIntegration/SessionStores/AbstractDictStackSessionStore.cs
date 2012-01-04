@@ -50,9 +50,9 @@ namespace Castle.Facilities.NHibernateIntegration.SessionStores
 		{
 			get
 			{
-				if (string.IsNullOrEmpty(this._statelessSessionSlotKey))
-					this._statelessSessionSlotKey = string.Format("nh.facility.stacks.{0}", Guid.NewGuid());
-				return this._statelessSessionSlotKey;
+				if (string.IsNullOrEmpty(_statelessSessionSlotKey))
+					_statelessSessionSlotKey = string.Format("nh.facility.stacks.{0}", Guid.NewGuid());
+				return _statelessSessionSlotKey;
 			}
 		}
 		
@@ -78,7 +78,7 @@ namespace Castle.Facilities.NHibernateIntegration.SessionStores
 				StoreDictionary(alias2Stack);
 			}
 
-			Stack stack = alias2Stack[alias] as Stack;
+			var stack = alias2Stack[alias] as Stack;
 
 			if (stack == null)
 			{
@@ -122,7 +122,7 @@ namespace Castle.Facilities.NHibernateIntegration.SessionStores
 				StoreStatelessSessionDictionary(alias2Stack);
 			}
 
-			Stack stack = alias2Stack[alias] as Stack;
+			var stack = alias2Stack[alias] as Stack;
 
 			if (stack == null)
 			{

@@ -3,7 +3,6 @@
 	using System;
 	using System.Data;
 	using System.Linq.Expressions;
-
 	using NHibernate;
 	using NHibernate.Engine;
 
@@ -534,8 +533,8 @@
 		/// <returns></returns>
 		public static bool AreEqual(IStatelessSession left, IStatelessSession right)
 		{
-			StatelessSessionDelegate ssdLeft = left as StatelessSessionDelegate;
-			StatelessSessionDelegate ssdRight = right as StatelessSessionDelegate;
+			var ssdLeft = left as StatelessSessionDelegate;
+			var ssdRight = right as StatelessSessionDelegate;
 
 			if (ssdLeft != null && ssdRight != null)
 			{

@@ -20,10 +20,8 @@
 namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 {
 	using System;
-
+	using Components.Dao;
 	using NHibernate.Criterion;
-
-	using NHibernateIntegration.Components.Dao;
 	using Services.Transaction;
 
 	public class RootService : NHibernateGenericDao
@@ -47,7 +45,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Transaction]
 		public virtual Blog CreateBlogStatelessUsingDetachedCriteria(string name)
 		{
-			return this.firstDao.CreateStateless(name);
+			return firstDao.CreateStateless(name);
 		}
 
 		[Transaction]
@@ -56,7 +54,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			DetachedCriteria dc = DetachedCriteria.For<Blog>();
 			dc.Add(Property.ForName("Name").Eq(name));
 
-			var session = this.SessionManager.OpenSession();
+			var session = SessionManager.OpenSession();
 			return dc.GetExecutableCriteria(session).UniqueResult<Blog>();
 		}
 
@@ -66,7 +64,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			DetachedCriteria dc = DetachedCriteria.For<Blog>();
 			dc.Add(Property.ForName("Name").Eq(name));
 
-			var session = this.SessionManager.OpenStatelessSession();
+			var session = SessionManager.OpenStatelessSession();
 			return dc.GetExecutableCriteria(session).UniqueResult<Blog>();
 		}
 
@@ -94,7 +92,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Transaction]
 		public virtual void DoBlogRefOperation(Blog blog)
 		{
-			BlogRef blogRef = new BlogRef();
+			var blogRef = new BlogRef();
 			blogRef.ParentBlog = blog;
 			blogRef.Title = "title";
 			firstDao.AddBlogRef(blogRef);
@@ -140,7 +138,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Transaction]
 		public virtual void DoBlogRefOperationStateless(Blog blog)
 		{
-			BlogRef blogRef = new BlogRef();
+			var blogRef = new BlogRef();
 			blogRef.ParentBlog = blog;
 			blogRef.Title = "title";
 			firstDao.AddBlogRefStateless(blogRef);

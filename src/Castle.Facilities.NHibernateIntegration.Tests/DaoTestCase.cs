@@ -31,7 +31,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Common
 		{
 			container.Register(Component.For<BlogDao>().Named("blogdao"));
 
-			BlogDao dao = container.Resolve<BlogDao>("blogdao");
+			var dao = container.Resolve<BlogDao>("blogdao");
 			dao.CreateBlog("my blog");
 
 			IList blogs = dao.ObtainBlogs();
@@ -45,7 +45,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Common
 		{
 			container.Register(Component.For<BlogDao>().Named("blogdao"));
 
-			BlogDao dao = container.Resolve<BlogDao>("blogdao");
+			var dao = container.Resolve<BlogDao>("blogdao");
 			dao.CreateBlog("my blog");
 
 			IList blogs = dao.ObtainBlogsStateless();

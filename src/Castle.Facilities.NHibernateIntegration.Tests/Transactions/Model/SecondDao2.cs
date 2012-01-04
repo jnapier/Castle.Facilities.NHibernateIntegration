@@ -37,7 +37,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			{
 				NUnit.Framework.Assert.IsTrue(session.Transaction.IsActive);
 
-				BlogItem item = new BlogItem();
+				var item = new BlogItem();
 
 				item.ParentBlog = blog;
 				item.ItemDate = DateTime.Now;
@@ -54,7 +54,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		{
 			using (IStatelessSession session = sessManager.OpenStatelessSession())
 			{
-				BlogItem item = new BlogItem();
+				var item = new BlogItem();
 
 				item.ParentBlog = blog;
 				item.ItemDate = DateTime.Now;

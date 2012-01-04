@@ -108,7 +108,7 @@
 			public bool ShouldCloseSessionOnDistributedTransactionCompleted { get; set; }
 			private readonly ISessionImplementor sessionImplementor;
 			public bool IsInActiveTransaction;
-			private ITransaction nhtx;
+			private readonly ITransaction nhtx;
 
 			public DistributedTransactionContext(ISessionImplementor sessionImplementor, System.Transactions.Transaction transaction)
 			{
