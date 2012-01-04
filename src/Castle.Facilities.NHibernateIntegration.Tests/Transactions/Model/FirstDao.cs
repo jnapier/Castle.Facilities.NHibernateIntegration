@@ -23,7 +23,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 	using NHibernate;
 	using Services.Transaction;
 
-	[Transactional]
 	public class FirstDao
 	{
 		private readonly ISessionManager sessManager;
@@ -42,13 +41,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Transaction]
 		public virtual Blog Create(String name)
 		{
-			NHibernate.ITransaction tran;
-
 			using (ISession session = sessManager.OpenSession())
 			{
-				tran = session.Transaction;
-
-				NUnit.Framework.Assert.IsNotNull(session.Transaction);
 				NUnit.Framework.Assert.IsTrue(session.Transaction.IsActive);
 
 				Blog blog = new Blog();
@@ -63,7 +57,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		{
 			using (ISession session = sessManager.OpenSession())
 			{
-				NUnit.Framework.Assert.IsNotNull(session.Transaction);
+				NUnit.Framework.Assert.IsTrue(session.Transaction.IsActive);
+
 				session.Delete("from Blog b where b.Name ='" + name + "'");
 				session.Flush();
 			}
@@ -87,13 +82,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Transaction]
 		public virtual Blog CreateStateless(String name)
 		{
-			NHibernate.ITransaction tran;
-
 			using (IStatelessSession session = sessManager.OpenStatelessSession())
 			{
-				tran = session.Transaction;
-
-				NUnit.Framework.Assert.IsNotNull(session.Transaction);
 				NUnit.Framework.Assert.IsTrue(session.Transaction.IsActive);
 
 				Blog blog = new Blog();
@@ -108,7 +98,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		{
 			using (IStatelessSession session = sessManager.OpenStatelessSession())
 			{
-				NUnit.Framework.Assert.IsNotNull(session.Transaction);
+				NUnit.Framework.Assert.IsTrue(session.Transaction.IsActive);
+
 				session.Delete("from Blog b where b.Name ='" + name + "'");
 			}
 		}

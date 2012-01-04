@@ -35,6 +35,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		{
 			using (ISession session = sessManager.OpenSession())
 			{
+				NUnit.Framework.Assert.IsTrue(session.Transaction.IsActive);
+
 				BlogItem item = new BlogItem();
 
 				item.ParentBlog = blog;

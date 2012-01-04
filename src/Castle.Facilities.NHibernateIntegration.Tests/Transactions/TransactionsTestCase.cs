@@ -20,7 +20,6 @@
 namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 {
 	using System;
-	using AutoTx;
 	using MicroKernel.Registration;
 	using NHibernate;
 	using NUnit.Framework;
@@ -28,10 +27,13 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 	[TestFixture]
 	public class TransactionsTestCase : AbstractNHibernateTestCase
 	{
+		protected override string ConfigurationFile
+		{
+			get { return "Transactions/TwoDatabaseConfiguration.xml"; }
+		}
+
 		protected override void ConfigureContainer()
 		{
-			container.AddFacility("transactions", new TransactionFacility());
-
 			container.Register(Component.For<RootService>().Named("root"));
 			container.Register(Component.For<FirstDao>().Named("myfirstdao"));
 			container.Register(Component.For<SecondDao>().Named("myseconddao"));
@@ -108,13 +110,15 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 				// This call is transactional
 				Blog blog = service.Create();
 
+				Assert.IsFalse(transaction.IsActive);
+
 				RootService rootService = container.Resolve<RootService>();
 
 				Array blogs = rootService.FindAll(typeof (Blog));
 				Assert.AreEqual(1, blogs.Length);
 			}
 
-			Assert.IsTrue(transaction.WasCommitted);
+			Assert.IsFalse(transaction.WasCommitted);
 		}
 
 		[Test]
@@ -146,7 +150,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 				Assert.AreEqual(3, blogs.Length);
 			}
 
-			Assert.IsTrue(transaction.WasCommitted);
+			Assert.IsFalse(transaction.WasCommitted);
 		}
 
 		[Test]
@@ -297,7 +301,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 				Assert.AreEqual(1, blogs.Length);
 			}
 
-			Assert.IsTrue(transaction.WasCommitted);
+			Assert.IsFalse(transaction.WasCommitted);
 		}
 
 		[Test]
@@ -329,7 +333,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 				Assert.AreEqual(3, blogs.Length);
 			}
 
-			Assert.IsTrue(transaction.WasCommitted);
+			Assert.IsFalse(transaction.WasCommitted);
 		}
 
 		[Test]

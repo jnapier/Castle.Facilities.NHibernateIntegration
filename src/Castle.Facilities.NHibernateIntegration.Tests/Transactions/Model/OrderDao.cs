@@ -19,11 +19,10 @@
 
 namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 {
+	using Components.Dao;
 	using NHibernate;
-	using NHibernateIntegration.Components.Dao;
 	using Services.Transaction;
 
-	[Transactional]
 	public class OrderDao : NHibernateGenericDao
 	{
 		private readonly ISessionManager sessManager;

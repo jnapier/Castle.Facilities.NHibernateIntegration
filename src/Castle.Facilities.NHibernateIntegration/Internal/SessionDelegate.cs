@@ -1350,6 +1350,10 @@ namespace Castle.Facilities.NHibernateIntegration
 			{
 				return InternalClose(closing);
 			}
+			else
+			{
+				inner.Dispose(); //as nhib calls, soft dispose tx aware.
+			}
 
 			return null;
 		}
@@ -1358,7 +1362,7 @@ namespace Castle.Facilities.NHibernateIntegration
 		{
 			IDbConnection conn = null;
 
-			sessionStore.Remove(this);
+			UnregisterFromStore();
 
 			if (closing)
 			{
@@ -1371,6 +1375,15 @@ namespace Castle.Facilities.NHibernateIntegration
 
 			return conn;
 		}
+
+		internal void UnregisterFromStore()
+		{
+			IsUnregistred = true;
+
+			sessionStore.Remove(this);
+		}
+
+		internal bool IsUnregistred { get; set; }
 
 		/// <summary>
 		/// Returns <see langword="true"/> if the supplied sessions are equal, <see langword="false"/> otherwise.

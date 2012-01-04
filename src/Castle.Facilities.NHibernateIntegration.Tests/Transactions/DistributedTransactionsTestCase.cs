@@ -23,9 +23,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 	using AutoTx;
 	using MicroKernel.Registration;
 	using NUnit.Framework;
-	using Services.Transaction;
 
-	[TestFixture, Explicit("Build server Dtc's issues.")]
+	[TestFixture]
 	public class DistributedTransactionsTestCase : AbstractNHibernateTestCase
 	{
 		protected override string ConfigurationFile
@@ -35,8 +34,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 
 		protected override void ConfigureContainer()
 		{
-			container.AddFacility("transactions", new TransactionFacility());
-
 			container.Register(Component.For<RootService2>().Named("root"));
 			container.Register(Component.For<FirstDao2>().Named("myfirstdao"));
 			container.Register(Component.For<SecondDao2>().Named("myseconddao"));
@@ -49,16 +46,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			RootService2 service = container.Resolve<RootService2>();
 			OrderDao2 orderDao = container.Resolve<OrderDao2>("myorderdao");
 
-			try
-			{
-				service.DoTwoDBOperation_Create(false);
-			}
-			catch (Exception ex)
-			{
-				if (ex.InnerException != null && ex.InnerException.GetType().Name == "TransactionManagerCommunicationException")
-					Assert.Ignore("MTS is not available");
-				throw;
-			}
+			service.DoTwoDBOperation_Create(false);
 
 			Array blogs = service.FindAll(typeof (Blog));
 			Array blogitems = service.FindAll(typeof (BlogItem));
@@ -85,15 +73,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			catch (InvalidOperationException)
 			{
 				// Expected
-			}
-			catch (RollbackResourceException e)
-			{
-				foreach (var resource in e.FailedResources)
-				{
-					Console.WriteLine(resource.Second);
-				}
-
-				throw;
 			}
 
 			Array blogs = service.FindAll(typeof (Blog));
@@ -137,8 +116,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			Assert.AreEqual(1, orders.Length);
 		}
 
-		[Test, Ignore]
-		// TODO: System.Data.SqlClient.SqlException : New request is not allowed to start because it should come with valid transaction descriptor.
+		[Test]
 		public void ExceptionOnEndWithTwoDatabasesStateless()
 		{
 			RootService2 service = container.Resolve<RootService2>();
@@ -151,15 +129,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			catch (InvalidOperationException)
 			{
 				// Expected
-			}
-			catch (RollbackResourceException e)
-			{
-				foreach (var resource in e.FailedResources)
-				{
-					Console.WriteLine(resource.Second);
-				}
-
-				throw;
 			}
 
 			Array blogs = service.FindAllStateless(typeof(Blog));

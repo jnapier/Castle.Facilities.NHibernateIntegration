@@ -23,7 +23,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 	using NHibernate;
 	using Services.Transaction;
 
-	[Transactional]
 	public class FirstDao2
 	{
 		private readonly ISessionManager sessManager;
@@ -44,6 +43,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		{
 			using (ISession session = sessManager.OpenSession())
 			{
+				NUnit.Framework.Assert.IsTrue(session.Transaction.IsActive);
+
 				Blog blog = new Blog();
 				blog.Name = name;
 				session.Save(blog);

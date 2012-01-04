@@ -23,7 +23,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 	using NHibernateIntegration.Components.Dao;
 	using Services.Transaction;
 
-	[Transactional]
 	public class RootService2 : NHibernateGenericDao
 	{
 		private readonly FirstDao2 firstDao;
@@ -43,7 +42,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			set { orderDao = value; }
 		}
 
-		[Transaction(Distributed = true)]
+		[Transaction]
 		public virtual void DoTwoDBOperation_Create(bool throwException)
 		{
 			Blog blog = firstDao.Create();
@@ -56,7 +55,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			}
 		}
 
-		[Transaction(Distributed = true)]
+		[Transaction]
 		public virtual void DoTwoDBOperation_Create_Stateless(bool throwException)
 		{
 			Blog blog = firstDao.CreateStateless();

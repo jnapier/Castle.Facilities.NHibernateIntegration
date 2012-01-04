@@ -490,6 +490,10 @@
 			{
 				return InternalClose(closing);
 			}
+			else
+			{
+				innerSession.Dispose();
+			}
 
 			return null;
 		}
@@ -498,7 +502,7 @@
 		{
 			IDbConnection conn = null;
 
-			sessionStore.Remove(this);
+			UnregisterFromStore();
 
 			if (closing)
 			{
@@ -512,6 +516,15 @@
 
 			return conn;
 		}
+
+		internal void UnregisterFromStore()
+		{
+			IsUnregistred = true;
+
+			sessionStore.Remove(this);
+		}
+
+		internal bool IsUnregistred { get; set; }
 
 		/// <summary>
 		/// Returns <see langword="true"/> if the supplied stateless sessions are equal, <see langword="false"/> otherwise.

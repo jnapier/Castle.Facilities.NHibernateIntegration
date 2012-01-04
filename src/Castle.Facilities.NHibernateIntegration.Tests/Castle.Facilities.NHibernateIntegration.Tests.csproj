@@ -223,6 +223,37 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\TestConfigurationBuilder.cs" />
+    <Compile Include="Transactions\DistributedTransactionsTestCase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Transactions\Model\FirstDao.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Transactions\Model\FirstDao2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Transactions\Model\NHibernateGenericDao.cs" />
+    <Compile Include="Transactions\Model\OrderDao.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Transactions\Model\OrderDao2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Transactions\Model\RootService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Transactions\Model\RootService2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Transactions\Model\SecondDao.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Transactions\Model\SecondDao2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Transactions\TransactionsTestCase.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Wiring\DaoTestCase.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -233,11 +264,14 @@
     <EmbeddedResource Include="Common\BlogItem.hbm.xml" />
     <EmbeddedResource Include="Common\BlogRef.hbm.xml" />
     <EmbeddedResource Include="Common\Order.hbm.xml" />
+    <EmbeddedResource Include="Transactions\TwoDatabaseConfiguration.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Castle.Facilities.NHibernateIntegration\Castle.Facilities.NHibernateIntegration-vs2010.csproj">
+    <ProjectReference Include="..\Castle.Facilities.NHibernateIntegration\Castle.Facilities.NHibernateIntegration.csproj">
       <Project>{A3135261-0009-4F9C-A339-2900143E20F0}</Project>
-      <Name>Castle.Facilities.NHibernateIntegration-vs2010</Name>
+      <Name>Castle.Facilities.NHibernateIntegration</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -26,7 +26,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 	using NHibernateIntegration.Components.Dao;
 	using Services.Transaction;
 
-	[Transactional]
 	public class RootService : NHibernateGenericDao
 	{
 		private readonly FirstDao firstDao;

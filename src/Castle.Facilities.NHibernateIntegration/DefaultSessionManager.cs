@@ -21,13 +21,14 @@ namespace Castle.Facilities.NHibernateIntegration
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Data;
+	using System.Transactions;
 	using Internal;
 	using MicroKernel;
 	using MicroKernel.Facilities;
 	using NHibernate;
 	using Services.Transaction;
 	using ITransaction = Services.Transaction.ITransaction;
+	using IsolationLevel = System.Data.IsolationLevel;
 
 	/// <summary>
 	/// 
@@ -99,18 +100,19 @@ namespace Castle.Facilities.NHibernateIntegration
 
 			SessionDelegate wrapped = sessionStore.FindCompatibleSession(alias);
 
-			if (wrapped == null)
+			if (wrapped == null || (transaction != null && !wrapped.Transaction.IsActive))
 			{
 				var session = CreateSession(alias);
 
-				wrapped = WrapSession(transaction != null, session);
+				wrapped = WrapSession(transaction == null, session);
 				EnlistIfNecessary(true, transaction, wrapped);
+
 				sessionStore.Store(alias, wrapped);
 			}
 			else
 			{
+				wrapped = WrapSession(false, wrapped.InnerSession);
 				EnlistIfNecessary(false, transaction, wrapped);
-				wrapped = WrapSession(true, wrapped.InnerSession);
 			}
 
 			return wrapped;
@@ -140,18 +142,18 @@ namespace Castle.Facilities.NHibernateIntegration
 
 			StatelessSessionDelegate wrapped = sessionStore.FindCompatibleStatelessSession(alias);
 
-			if (wrapped == null)
+			if (wrapped == null || (transaction != null && !wrapped.Transaction.IsActive))
 			{
 				IStatelessSession session = CreateStatelessSession(alias);
 
-				wrapped = WrapSession(transaction != null, session);
+				wrapped = WrapSession(transaction == null, session);
 				EnlistIfNecessary(true, transaction, wrapped);
 				sessionStore.Store(alias, wrapped);
 			}
 			else
 			{
 				EnlistIfNecessary(false, transaction, wrapped);
-				wrapped = WrapSession(true, wrapped.InnerSession);
+				wrapped = WrapSession(false, wrapped.InnerSession);
 			}
 
 			return wrapped;
@@ -170,47 +172,13 @@ namespace Castle.Facilities.NHibernateIntegration
 		{
 			if (transaction == null) return false;
 
-			var list = transaction.DataContext.ContainsKey("nh.session.enlisted") ? (IList<ISession>) transaction.DataContext["nh.session.enlisted"] : null;
+			if (weAreSessionOwner && session.Transaction.IsActive)
+				transaction.Inner.TransactionCompleted += (sender, args) =>
+					                                          		{
+					                                          			if (session.IsUnregistred) return;
 
-			bool shouldEnlist;
-
-			if (list == null)
-			{
-				list = new List<ISession>();
-
-				shouldEnlist = true;
-			}
-			else
-			{
-				shouldEnlist = true;
-
-				foreach (ISession sess in list)
-				{
-					if (SessionDelegate.AreEqual(session, sess))
-					{
-						shouldEnlist = false;
-						break;
-					}
-				}
-			}
-
-			if (shouldEnlist)
-			{
-				if (session.Transaction == null || !session.Transaction.IsActive)
-				{
-					transaction.DataContext["nh.session.enlisted"] = list;
-
-					//IsolationLevel level = TranslateIsolationLevel(transaction.IsolationMode);
-					//transaction.Enlist(new ResourceAdapter(session.BeginTransaction(level), transaction.IsAmbient));
-
-					list.Add(session);
-				}
-
-				//if (weAreSessionOwner)
-				//{
-				//    transaction.RegisterSynchronization(new SessionDisposeSynchronization(session));
-				//}
-			}
+																		session.UnregisterFromStore();
+					                                          		};
 
 			return true;
 		}
@@ -228,47 +196,13 @@ namespace Castle.Facilities.NHibernateIntegration
 		{
 			if (transaction == null) return false;
 
-			var list = transaction.DataContext.ContainsKey("nh.statelessSession.enlisted") ? (IList<IStatelessSession>) transaction.DataContext["nh.statelessSession.enlisted"] : null;
+			if (weAreSessionOwner && session.Transaction.IsActive)
+				transaction.Inner.TransactionCompleted += (sender, args) =>
+					                                          		{
+					                                          			if (session.IsUnregistred) return;
 
-			bool shouldEnlist;
-
-			if (list == null)
-			{
-				list = new List<IStatelessSession>();
-
-				shouldEnlist = true;
-			}
-			else
-			{
-				shouldEnlist = true;
-
-				foreach (IStatelessSession sess in list)
-				{
-					if (StatelessSessionDelegate.AreEqual(session, sess))
-					{
-						shouldEnlist = false;
-						break;
-					}
-				}
-			}
-
-			if (shouldEnlist)
-			{
-				if (session.Transaction == null || !session.Transaction.IsActive)
-				{
-					transaction.DataContext["nh.statelessSession.enlisted"] = list;
-
-					//IsolationLevel level = TranslateIsolationLevel(transaction.IsolationMode);
-					//transaction.Enlist(new ResourceAdapter(session.BeginTransaction(level), transaction.IsAmbient));
-
-					list.Add(session);
-				}
-
-				//if (weAreSessionOwner)
-				//{
-				//    transaction.RegisterSynchronization(new StatelessSessionDisposeSynchronization(session));
-				//}
-			}
+																		session.UnregisterFromStore();
+					                                          		};
 
 			return true;
 		}
@@ -299,14 +233,14 @@ namespace Castle.Facilities.NHibernateIntegration
 			return transactionManager.CurrentTransaction.HasValue ? transactionManager.CurrentTransaction.Value : null;
 		}
 
-		private SessionDelegate WrapSession(bool hasTransaction, ISession session)
+		private SessionDelegate WrapSession(bool canClose, ISession session)
 		{
-			return new SessionDelegate(!hasTransaction, session, sessionStore);
+			return new SessionDelegate(canClose, session, sessionStore);
 		}
 
-		private StatelessSessionDelegate WrapSession(bool hasTransaction, IStatelessSession session)
+		private StatelessSessionDelegate WrapSession(bool canClose, IStatelessSession session)
 		{
-			return new StatelessSessionDelegate(!hasTransaction, session, sessionStore);
+			return new StatelessSessionDelegate(canClose, session, sessionStore);
 		}
 		
 		private ISession CreateSession(String alias)
@@ -358,6 +292,28 @@ namespace Castle.Facilities.NHibernateIntegration
 			IStatelessSession session = sessionFactory.OpenStatelessSession();
 
 			return session;
+		}
+	}
+
+	internal static class IsolationLevelExtensions
+	{
+		internal static IsolationLevel AsDataIsolationLevel(this System.Transactions.IsolationLevel level)
+		{
+			switch (level)
+			{
+				case System.Transactions.IsolationLevel.Chaos:
+					return IsolationLevel.Chaos;
+				case System.Transactions.IsolationLevel.ReadCommitted:
+					return IsolationLevel.ReadCommitted;
+				case System.Transactions.IsolationLevel.ReadUncommitted:
+					return IsolationLevel.ReadUncommitted;
+				case System.Transactions.IsolationLevel.RepeatableRead:
+					return IsolationLevel.RepeatableRead;
+				case System.Transactions.IsolationLevel.Serializable:
+					return IsolationLevel.Serializable;
+				default:
+					return IsolationLevel.Unspecified;
+			}
 		}
 	}
 }

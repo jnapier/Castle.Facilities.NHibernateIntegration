@@ -23,7 +23,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 	using NHibernate;
 	using Services.Transaction;
 
-	[Transactional]
 	public class SecondDao
 	{
 		private readonly ISessionManager sessManager;

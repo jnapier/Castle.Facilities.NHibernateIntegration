@@ -23,7 +23,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 	using NHibernateIntegration.Components.Dao;
 	using Services.Transaction;
 
-	[Transactional]
 	public class OrderDao2 : NHibernateGenericDao
 	{
 		private readonly ISessionManager sessManager;
@@ -38,7 +37,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		{
 			using (ISession session = sessManager.OpenSession("db2"))
 			{
-				NUnit.Framework.Assert.IsNotNull(session.Transaction);
+				NUnit.Framework.Assert.IsTrue(session.Transaction.IsActive);
 
 				Order order = new Order();
 				order.Value = val;
