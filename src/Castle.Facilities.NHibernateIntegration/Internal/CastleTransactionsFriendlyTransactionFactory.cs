@@ -28,7 +28,7 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 	/// <summary>
 	/// 
 	/// </summary>
-	public class CustomTransactionFactory : ITransactionFactory
+	public class CastleTransactionsFriendlyTransactionFactory : ITransactionFactory
 	{
 		private static readonly IInternalLogger logger = LoggerProvider.LoggerFor(typeof(ITransactionFactory));
 

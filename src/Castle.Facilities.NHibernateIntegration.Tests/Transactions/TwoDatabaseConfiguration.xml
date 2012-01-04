@@ -31,7 +31,7 @@
 					<item key="connection.connection_string">
 						Data Source=.; Initial Catalog=test; Integrated Security=SSPI
 					</item>
-					<item key="transaction.factory_class">Castle.Facilities.NHibernateIntegration.Internal.CustomTransactionFactory, Castle.Facilities.NHibernateIntegration</item>
+					<item key="transaction.factory_class">Castle.Facilities.NHibernateIntegration.Internal.CastleTransactionsFriendlyTransactionFactory, Castle.Facilities.NHibernateIntegration</item>
 				</settings>
 				<assemblies>
 					<assembly>
@@ -55,7 +55,7 @@
 					<item key="connection.connection_string">
 						Data Source=.; Initial Catalog=test2; Integrated Security=SSPI
 					</item>
-					<item key="transaction.factory_class">Castle.Facilities.NHibernateIntegration.Internal.CustomTransactionFactory, Castle.Facilities.NHibernateIntegration</item>
+					<item key="transaction.factory_class">Castle.Facilities.NHibernateIntegration.Internal.CastleTransactionsFriendlyTransactionFactory, Castle.Facilities.NHibernateIntegration</item>
 				</settings>
 				<assemblies>
 					<assembly>
@@ -79,7 +79,7 @@
 					<item key="connection.connection_string">
 						Data Source=.; Initial Catalog=test2; Integrated Security=SSPI
 					</item>
-					<item key="transaction.factory_class">Castle.Facilities.NHibernateIntegration.Internal.CustomTransactionFactory, Castle.Facilities.NHibernateIntegration</item>
+					<item key="transaction.factory_class">Castle.Facilities.NHibernateIntegration.Internal.CastleTransactionsFriendlyTransactionFactory, Castle.Facilities.NHibernateIntegration</item>
 				</settings>
 				<assemblies>
 					<assembly>
@@ -103,7 +103,7 @@
 					<item key="connection.connection_string">
 						Data Source=.; Initial Catalog=test2; Integrated Security=SSPI
 					</item>
-					<item key="transaction.factory_class">Castle.Facilities.NHibernateIntegration.Internal.CustomTransactionFactory, Castle.Facilities.NHibernateIntegration</item>
+					<item key="transaction.factory_class">Castle.Facilities.NHibernateIntegration.Internal.CastleTransactionsFriendlyTransactionFactory, Castle.Facilities.NHibernateIntegration</item>
 				</settings>
 				<assemblies>
 					<assembly>

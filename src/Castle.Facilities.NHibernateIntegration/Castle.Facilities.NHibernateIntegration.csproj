@@ -149,7 +149,7 @@
     <Compile Include="Components\Web\SessionWebModule.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Internal\CustomTransactionFactory.cs" />
+    <Compile Include="Internal\CastleTransactionsFriendlyTransactionFactory.cs" />
     <Compile Include="Internal\NHTransaction.cs" />
     <Compile Include="Internal\StatelessSessionDelegate.cs" />
     <Compile Include="Util\FieldInfoCollection.cs">
