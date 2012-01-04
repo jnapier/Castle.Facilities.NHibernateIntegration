@@ -63,34 +63,11 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 			//session.AfterTransactionBegin(null);
 
 			if (!session.ConnectionManager.Transaction.IsActive)
+			{
+				transactionContext.ShouldCloseSessionOnDistributedTransactionCompleted = true;
 				session.ConnectionManager.Transaction.Begin(transactionContext.AmbientTransation.IsolationLevel.AsDataIsolationLevel());
+			}
 			
-			transactionContext.AmbientTransation.TransactionCompleted +=
-				delegate(object sender, TransactionEventArgs e)
-					{
-						using (new SessionIdLoggingContext(session.SessionId))
-						{
-							((DistributedTransactionContext)session.TransactionContext).IsInActiveTransaction = false;
-							
-							bool wasSuccessful = false;
-							try
-							{
-								wasSuccessful = e.Transaction.TransactionInformation.Status
-												== TransactionStatus.Committed;
-							}
-							catch (ObjectDisposedException ode)
-							{
-								logger.Warn("Completed transaction was disposed, assuming transaction rollback", ode);
-							}
-							session.AfterTransactionCompletion(wasSuccessful, null);
-							if (transactionContext.ShouldCloseSessionOnDistributedTransactionCompleted)
-							{
-								session.CloseSessionFromDistributedTransaction();
-							}
-							session.TransactionContext = null;
-						}
-					};
-
 			transactionContext.AmbientTransation.EnlistVolatile(transactionContext, EnlistmentOptions.EnlistDuringPrepareRequired);
 		}
 
@@ -122,14 +99,14 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 		{
 			public System.Transactions.Transaction AmbientTransation { get; set; }
 			public bool ShouldCloseSessionOnDistributedTransactionCompleted { get; set; }
-			private readonly ISessionImplementor sessionImplementor;
+			private readonly ISessionImplementor session;
 			public bool IsInActiveTransaction;
 			private readonly ITransaction nhtx;
 
-			public DistributedTransactionContext(ISessionImplementor sessionImplementor, System.Transactions.Transaction transaction)
+			public DistributedTransactionContext(ISessionImplementor session, System.Transactions.Transaction transaction)
 			{
-				nhtx =  sessionImplementor.ConnectionManager.Transaction;
-				this.sessionImplementor = sessionImplementor;
+				nhtx =  session.ConnectionManager.Transaction;
+				this.session = session;
 				AmbientTransation = transaction;
 				IsInActiveTransaction = true;
 			}
@@ -138,19 +115,19 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 
 			void IEnlistmentNotification.Prepare(PreparingEnlistment preparingEnlistment)
 			{
-				using (new SessionIdLoggingContext(sessionImplementor.SessionId))
+				using (new SessionIdLoggingContext(session.SessionId))
 				{
 					try
 					{
 						//using (var tx = new TransactionScope(AmbientTransation))
 						{
-							sessionImplementor.BeforeTransactionCompletion(null);
-							if (sessionImplementor.FlushMode != FlushMode.Never && sessionImplementor.ConnectionManager.IsConnected)
+							session.BeforeTransactionCompletion(null);
+							if (session.FlushMode != FlushMode.Never && session.ConnectionManager.IsConnected)
 							{
-								using (sessionImplementor.ConnectionManager.FlushingFromDtcTransaction)
+								using (session.ConnectionManager.FlushingFromDtcTransaction)
 								{
-									logger.Debug(string.Format("[session-id={0}] Flushing from Dtc Transaction", sessionImplementor.SessionId));
-									sessionImplementor.Flush();
+									logger.Debug(string.Format("[session-id={0}] Flushing from Dtc Transaction", session.SessionId));
+									session.Flush();
 								}
 							}
 							logger.Debug("prepared for DTC transaction");
@@ -169,39 +146,63 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 
 			void IEnlistmentNotification.Commit(Enlistment enlistment)
 			{
-				using (new SessionIdLoggingContext(sessionImplementor.SessionId))
+				using (new SessionIdLoggingContext(session.SessionId))
 				{
 					logger.Debug("committing DTC transaction");
 					
 					nhtx.Commit();
-
+					End(true);
+					
 					enlistment.Done();
+
 					IsInActiveTransaction = false;
 				}
 			}
 
 			void IEnlistmentNotification.Rollback(Enlistment enlistment)
 			{
-				using (new SessionIdLoggingContext(sessionImplementor.SessionId))
+				using (new SessionIdLoggingContext(session.SessionId))
 				{
-					sessionImplementor.AfterTransactionCompletion(false, null);
+					session.AfterTransactionCompletion(false, null);
 					logger.Debug("rolled back DTC transaction");
 
 					nhtx.Rollback();
-
+					End(false);
+					
 					enlistment.Done();
+					
 					IsInActiveTransaction = false;
 				}
 			}
 
 			void IEnlistmentNotification.InDoubt(Enlistment enlistment)
 			{
-				using (new SessionIdLoggingContext(sessionImplementor.SessionId))
+				using (new SessionIdLoggingContext(session.SessionId))
 				{
-					sessionImplementor.AfterTransactionCompletion(false, null);
+					session.AfterTransactionCompletion(false, null);
 					logger.Debug("DTC transaction is in doubt");
+					
+					End(false);
+					
 					enlistment.Done();
 					IsInActiveTransaction = false;
+				}
+			}
+
+			void End(bool wasSuccessful)
+			{
+				using (new SessionIdLoggingContext(session.SessionId))
+				{
+					((DistributedTransactionContext)session.TransactionContext).IsInActiveTransaction = false;
+							
+					session.AfterTransactionCompletion(wasSuccessful, null);
+
+					if (ShouldCloseSessionOnDistributedTransactionCompleted)
+					{
+						session.CloseSessionFromDistributedTransaction();
+					}
+
+					session.TransactionContext = null;
 				}
 			}
 

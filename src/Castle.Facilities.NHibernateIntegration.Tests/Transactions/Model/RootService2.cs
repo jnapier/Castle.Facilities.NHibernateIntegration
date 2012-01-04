@@ -40,6 +40,18 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		}
 
 		[Transaction]
+		public virtual void DoTwoDBOperation_CreateEx(bool throwException)
+		{
+			firstDao.Create(Guid.NewGuid().ToString());
+			orderDao.Create(1.122f);
+
+			if (throwException)
+			{
+				throw new InvalidOperationException("Nah, giving up");
+			}
+		}
+
+		[Transaction]
 		public virtual void DoTwoDBOperation_Create(bool throwException)
 		{
 			Blog blog = firstDao.Create();

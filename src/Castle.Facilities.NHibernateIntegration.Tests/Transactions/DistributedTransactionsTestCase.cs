@@ -17,6 +17,7 @@
 namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 {
 	using System;
+	using System.Threading;
 	using MicroKernel.Registration;
 	using NUnit.Framework;
 
@@ -54,6 +55,88 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 			Assert.AreEqual(1, blogs.Length);
 			Assert.AreEqual(1, blogitems.Length);
 			Assert.AreEqual(1, orders.Length);
+		}
+
+		[Test]
+		public void ReleasingConnectionProperly()
+		{
+			AppDomain.CurrentDomain.FirstChanceException += (sender, args) =>
+			                                                	{
+			                                                		Console.WriteLine(args.Exception);
+			                                                	};
+			var service = container.Resolve<RootService2>();
+
+			for (int i = 0; i < 10; i++)
+			{
+				service.DoTwoDBOperation_CreateEx(false);
+				
+				Console.WriteLine("Round " + i);
+			}
+		}
+
+		[Test]
+		public void CallWithDbGeneratedErrorNotBlocking()
+		{
+			var service = container.Resolve<RootService2>();
+
+			for (int i = 0; i < 300; i++)
+			{
+				try
+				{
+					//Throws a constraint violation if called twice
+					service.DoTwoDBOperation_Create(false);
+				}
+				catch (Exception)
+				{
+					Console.WriteLine("Expected Error: " + i);
+				}
+			}
+
+			Thread.Sleep(10);
+		}
+
+
+
+		[Test]
+		public void CallWithAppErrorNotBlocking()
+		{
+			var service = container.Resolve<RootService2>();
+
+			for (int i = 0; i < 350; i++)
+			{
+				try
+				{
+					service.DoTwoDBOperation_CreateEx(true);
+				}
+				catch (Exception)
+				{
+					Console.WriteLine("Expected Error: " + i);
+				}
+			}
+
+			Thread.Sleep(10);
+		}
+
+		[Test]
+		public void CallWithMixedErrorNotBlocking()
+		{
+			var service = container.Resolve<RootService2>();
+
+			for (int i = 0; i < 350; i++)
+			{
+				try
+				{
+					Console.WriteLine("n");
+
+					service.DoTwoDBOperation_Create(true);
+				}
+				catch (Exception)
+				{
+					Console.WriteLine("Expected Error: " + i);
+				}
+			}
+
+			Thread.Sleep(10);
 		}
 
 		[Test]

@@ -16,6 +16,7 @@
 #endregion
 namespace Castle.Facilities.NHibernateIntegration.Tests
 {
+	using System;
 	using AutoTx;
 	using Core.Resource;
 	using NHibernate.Tool.hbm2ddl;
@@ -65,6 +66,8 @@ namespace Castle.Facilities.NHibernateIntegration.Tests
 		[TearDown]
 		public virtual void TearDown()
 		{
+			Console.WriteLine("Tear down");
+
 			OnTearDown();
 			DropDatabaseSchema();
 			container.Dispose();

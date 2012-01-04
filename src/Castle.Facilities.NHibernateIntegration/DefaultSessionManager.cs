@@ -18,10 +18,12 @@ namespace Castle.Facilities.NHibernateIntegration
 {
 	using System;
 	using System.Data;
+	using Core.Logging;
 	using MicroKernel;
 	using MicroKernel.Facilities;
 	using NHibernate;
 	using Services.Transaction;
+	using log4net.Repository.Hierarchy;
 	using ITransaction = Services.Transaction.ITransaction;
 
 	/// <summary>
@@ -59,7 +61,14 @@ namespace Castle.Facilities.NHibernateIntegration
 			this.kernel = kernel;
 			this.sessionStore = sessionStore;
 			this.factoryResolver = factoryResolver;
+
+			Logger = NullLogger.Instance;
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public ILogger Logger { get; set; }
 
 		/// <summary>
 		/// The flushmode the created session gets
@@ -169,9 +178,16 @@ namespace Castle.Facilities.NHibernateIntegration
 			if (weAreSessionOwner && session.Transaction.IsActive)
 				transaction.Inner.TransactionCompleted += (sender, args) =>
 					                                          		{
-					                                          			if (session.IsUnregistred) return;
+					                                          			try
+					                                          			{
+					                                          				if (session.IsUnregistred) return;
 
-																		session.UnregisterFromStore();
+					                                          				session.UnregisterFromStore();
+					                                          			}
+					                                          			catch (Exception e)
+					                                          			{
+					                                          				Logger.Error("Error completing tx", e);
+					                                          			}
 					                                          		};
 
 			return true;
@@ -193,9 +209,16 @@ namespace Castle.Facilities.NHibernateIntegration
 			if (weAreSessionOwner && session.Transaction.IsActive)
 				transaction.Inner.TransactionCompleted += (sender, args) =>
 					                                          		{
-					                                          			if (session.IsUnregistred) return;
+					                                          			try
+					                                          			{
+					                                          				if (session.IsUnregistred) return;
 
-																		session.UnregisterFromStore();
+					                                          				session.UnregisterFromStore();
+					                                          			}
+					                                          			catch (Exception e)
+					                                          			{
+					                                          				Console.WriteLine(e);
+					                                          			}
 					                                          		};
 
 			return true;
