@@ -534,6 +534,8 @@ namespace Castle.Facilities.NHibernateIntegration
 
 		internal void UnregisterFromStore()
 		{
+			if (IsUnregistred) return;
+
 			IsUnregistred = true;
 
 			sessionStore.Remove(this);

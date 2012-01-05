@@ -60,13 +60,9 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		[Test]
 		public void ReleasingConnectionProperly()
 		{
-			AppDomain.CurrentDomain.FirstChanceException += (sender, args) =>
-			                                                	{
-			                                                		Console.WriteLine(args.Exception);
-			                                                	};
 			var service = container.Resolve<RootService2>();
 
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 100; i++)
 			{
 				service.DoTwoDBOperation_CreateEx(false);
 				
@@ -91,8 +87,6 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 					Console.WriteLine("Expected Error: " + i);
 				}
 			}
-
-			Thread.Sleep(10);
 		}
 
 
@@ -102,7 +96,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 		{
 			var service = container.Resolve<RootService2>();
 
-			for (int i = 0; i < 350; i++)
+			for (int i = 0; i < 100; i++)
 			{
 				try
 				{
@@ -114,7 +108,7 @@ namespace Castle.Facilities.NHibernateIntegration.Tests.Transactions
 				}
 			}
 
-			Thread.Sleep(10);
+			//Thread.Sleep(10);
 		}
 
 		[Test]

@@ -146,6 +146,8 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 
 			void IEnlistmentNotification.Commit(Enlistment enlistment)
 			{
+				Console.WriteLine("ctxn c");
+
 				using (new SessionIdLoggingContext(session.SessionId))
 				{
 					logger.Debug("committing DTC transaction");
@@ -161,9 +163,11 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 
 			void IEnlistmentNotification.Rollback(Enlistment enlistment)
 			{
+				Console.WriteLine("ctxn r");
+
 				using (new SessionIdLoggingContext(session.SessionId))
 				{
-					session.AfterTransactionCompletion(false, null);
+					//session.AfterTransactionCompletion(false, null);
 					logger.Debug("rolled back DTC transaction");
 
 					nhtx.Rollback();

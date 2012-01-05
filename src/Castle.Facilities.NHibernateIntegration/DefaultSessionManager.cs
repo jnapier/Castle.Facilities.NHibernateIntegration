@@ -17,7 +17,7 @@
 namespace Castle.Facilities.NHibernateIntegration
 {
 	using System;
-	using System.Data;
+	using System.Transactions;
 	using Core.Logging;
 	using MicroKernel;
 	using MicroKernel.Facilities;
@@ -25,6 +25,7 @@ namespace Castle.Facilities.NHibernateIntegration
 	using Services.Transaction;
 	using log4net.Repository.Hierarchy;
 	using ITransaction = Services.Transaction.ITransaction;
+	using IsolationLevel = System.Data.IsolationLevel;
 
 	/// <summary>
 	/// 
@@ -176,19 +177,11 @@ namespace Castle.Facilities.NHibernateIntegration
 			if (transaction == null) return false;
 
 			if (weAreSessionOwner && session.Transaction.IsActive)
-				transaction.Inner.TransactionCompleted += (sender, args) =>
-					                                          		{
-					                                          			try
-					                                          			{
-					                                          				if (session.IsUnregistred) return;
+			{
+				var ue = new UnregisterEnlistment(Logger, session.UnregisterFromStore);
 
-					                                          				session.UnregisterFromStore();
-					                                          			}
-					                                          			catch (Exception e)
-					                                          			{
-					                                          				Logger.Error("Error completing tx", e);
-					                                          			}
-					                                          		};
+				transaction.Inner.EnlistVolatile(ue, EnlistmentOptions.EnlistDuringPrepareRequired);
+			}
 
 			return true;
 		}
@@ -207,19 +200,12 @@ namespace Castle.Facilities.NHibernateIntegration
 			if (transaction == null) return false;
 
 			if (weAreSessionOwner && session.Transaction.IsActive)
-				transaction.Inner.TransactionCompleted += (sender, args) =>
-					                                          		{
-					                                          			try
-					                                          			{
-					                                          				if (session.IsUnregistred) return;
+			{
+				var ue = new UnregisterEnlistment(Logger, session.UnregisterFromStore);
 
-					                                          				session.UnregisterFromStore();
-					                                          			}
-					                                          			catch (Exception e)
-					                                          			{
-					                                          				Console.WriteLine(e);
-					                                          			}
-					                                          		};
+				transaction.Inner.EnlistVolatile(ue, EnlistmentOptions.EnlistDuringPrepareRequired);
+			}
+				
 
 			return true;
 		}
@@ -309,6 +295,60 @@ namespace Castle.Facilities.NHibernateIntegration
 			IStatelessSession session = sessionFactory.OpenStatelessSession();
 
 			return session;
+		}
+
+		internal class UnregisterEnlistment : IEnlistmentNotification
+		{
+			private readonly Action callback;
+			private readonly ILogger logger;
+
+			public UnregisterEnlistment(ILogger logger, Action callback)
+			{
+				this.callback = callback;
+				this.logger = logger;
+			}
+
+			private void Undertaker()
+			{
+				try
+				{
+					callback();
+				}
+				catch (Exception e)
+				{
+					logger.Error("Error completing tx", e);
+				}
+			}
+
+			public void Prepare(PreparingEnlistment preparingEnlistment)
+			{
+				Console.WriteLine("ue p");
+
+				Undertaker();
+
+				preparingEnlistment.Prepared();
+			}
+
+			public void Commit(Enlistment enlistment)
+			{
+				Undertaker();
+
+				enlistment.Done();
+			}
+
+			public void Rollback(Enlistment enlistment)
+			{
+				Undertaker();
+
+				enlistment.Done();
+			}
+
+			public void InDoubt(Enlistment enlistment)
+			{
+				Undertaker();
+
+				enlistment.Done();
+			}
 		}
 	}
 
