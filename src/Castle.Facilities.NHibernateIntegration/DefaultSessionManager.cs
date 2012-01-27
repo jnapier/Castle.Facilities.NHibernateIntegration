@@ -108,10 +108,14 @@ namespace Castle.Facilities.NHibernateIntegration
 			{
 				var session = CreateSession(alias);
 
+				Logger.Info("Created Session " + session.GetSessionImplementation().SessionId);
+
 				wrapped = WrapSession(transaction == null, session);
 				EnlistIfNecessary(true, transaction, wrapped);
 
 				sessionStore.Store(alias, wrapped);
+
+				Logger.Info("Wrapped Session " + session.GetSessionImplementation().SessionId);
 			}
 			else
 			{
@@ -174,11 +178,21 @@ namespace Castle.Facilities.NHibernateIntegration
 										 ITransaction transaction,
 										 SessionDelegate session)
 		{
-			if (transaction == null) return false;
+			if (transaction == null)
+			{
+				Logger.Info("Tx not found. Nothing to do here.");
+
+				return false;
+			}
+
+			Logger.InfoFormat("Enlistment status. Session: {0}. Tx IsActive: {1}. Are we Session Owner: {2}", 
+				session.GetSessionImplementation().SessionId, session.Transaction.IsActive, weAreSessionOwner);
 
 			if (weAreSessionOwner && session.Transaction.IsActive)
 			{
-				var ue = new UnregisterEnlistment(Logger, session.UnregisterFromStore);
+				Logger.Info("Enlisted Session " + session.GetSessionImplementation().SessionId);
+
+				var ue = new UnregisterEnlistment(Logger, session.UnregisterFromStore, transaction);
 
 				transaction.Inner.EnlistVolatile(ue, EnlistmentOptions.EnlistDuringPrepareRequired);
 			}
@@ -201,7 +215,7 @@ namespace Castle.Facilities.NHibernateIntegration
 
 			if (weAreSessionOwner && session.Transaction.IsActive)
 			{
-				var ue = new UnregisterEnlistment(Logger, session.UnregisterFromStore);
+				var ue = new UnregisterEnlistment(Logger, session.UnregisterFromStore, transaction);
 
 				transaction.Inner.EnlistVolatile(ue, EnlistmentOptions.EnlistDuringPrepareRequired);
 			}
@@ -300,11 +314,17 @@ namespace Castle.Facilities.NHibernateIntegration
 		internal class UnregisterEnlistment : IEnlistmentNotification
 		{
 			private readonly Action callback;
-			private readonly ILogger logger;
 
-			public UnregisterEnlistment(ILogger logger, Action callback)
+			private readonly ILogger logger;
+			private string id;
+
+			public UnregisterEnlistment(ILogger logger, Action callback, ITransaction transaction)
 			{
 				this.callback = callback;
+				id = transaction.Inner.TransactionInformation.LocalIdentifier;
+
+				logger.Info("Enlisted to undertake " + id);
+
 				this.logger = logger;
 			}
 
@@ -312,6 +332,8 @@ namespace Castle.Facilities.NHibernateIntegration
 			{
 				try
 				{
+					logger.Info("Undertake started " + id);
+
 					callback();
 				}
 				catch (Exception e)
@@ -322,7 +344,7 @@ namespace Castle.Facilities.NHibernateIntegration
 
 			public void Prepare(PreparingEnlistment preparingEnlistment)
 			{
-				Console.WriteLine("ue p");
+				logger.Info("ue p");
 
 				Undertaker();
 

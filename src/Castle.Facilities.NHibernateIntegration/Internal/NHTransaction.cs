@@ -221,6 +221,8 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 					committed = true;
 					AfterTransactionCompletion(true);
 					Dispose();
+
+					log.Debug("Committed");
 				}
 				catch (HibernateException e)
 				{

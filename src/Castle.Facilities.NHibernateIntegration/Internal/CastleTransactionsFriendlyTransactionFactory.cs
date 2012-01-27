@@ -30,7 +30,7 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 	/// </summary>
 	public class CastleTransactionsFriendlyTransactionFactory : ITransactionFactory
 	{
-		private static readonly IInternalLogger logger = LoggerProvider.LoggerFor(typeof(ITransactionFactory));
+		private static readonly IInternalLogger logger = LoggerProvider.LoggerFor(typeof(CastleTransactionsFriendlyTransactionFactory));
 
 		private readonly AdoNetTransactionFactory adoNetTransactionFactory = new AdoNetTransactionFactory();
 
@@ -58,7 +58,9 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 			var transactionContext = new DistributedTransactionContext(session, System.Transactions.Transaction.Current);
 			session.TransactionContext = transactionContext;
 
-			logger.DebugFormat("enlisted into DTC transaction: {0}", transactionContext.AmbientTransation.IsolationLevel);
+			logger.DebugFormat("enlisted into DTC transaction: {0}. Id: {1}.", 
+				transactionContext.AmbientTransation.IsolationLevel, 
+				transactionContext.AmbientTransation.TransactionInformation.LocalIdentifier);
 
 			//session.AfterTransactionBegin(null);
 
@@ -66,6 +68,10 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 			{
 				transactionContext.ShouldCloseSessionOnDistributedTransactionCompleted = true;
 				session.ConnectionManager.Transaction.Begin(transactionContext.AmbientTransation.IsolationLevel.AsDataIsolationLevel());
+			} 
+			else
+			{
+				logger.Debug("Tx is active");
 			}
 			
 			transactionContext.AmbientTransation.EnlistVolatile(transactionContext, EnlistmentOptions.EnlistDuringPrepareRequired);
@@ -97,20 +103,25 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 
 		public class DistributedTransactionContext : ITransactionContext, IEnlistmentNotification
 		{
-			public System.Transactions.Transaction AmbientTransation { get; set; }
-			public bool ShouldCloseSessionOnDistributedTransactionCompleted { get; set; }
 			private readonly ISessionImplementor session;
-			public bool IsInActiveTransaction;
 			private readonly ITransaction nhtx;
 
+			public bool IsInActiveTransaction;
+			
 			public DistributedTransactionContext(ISessionImplementor session, System.Transactions.Transaction transaction)
 			{
-				nhtx =  session.ConnectionManager.Transaction;
 				this.session = session;
+
+				nhtx =  session.ConnectionManager.Transaction;
+				
 				AmbientTransation = transaction;
 				IsInActiveTransaction = true;
 			}
 
+			public System.Transactions.Transaction AmbientTransation { get; set; }
+			
+			public bool ShouldCloseSessionOnDistributedTransactionCompleted { get; set; }
+			
 			#region IEnlistmentNotification Members
 
 			void IEnlistmentNotification.Prepare(PreparingEnlistment preparingEnlistment)
@@ -130,7 +141,7 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 									session.Flush();
 								}
 							}
-							logger.Debug("prepared for DTC transaction");
+							logger.Debug("prepared for DTC transaction " + AmbientTransation.TransactionInformation.LocalIdentifier);
 
 							//tx.Complete();
 						}
