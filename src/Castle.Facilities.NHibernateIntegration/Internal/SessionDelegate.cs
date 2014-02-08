@@ -1347,10 +1347,11 @@ namespace Castle.Facilities.NHibernateIntegration
 			{
 				return InternalClose(closing);
 			}
-			else
-			{
-				inner.Dispose(); //as nhib calls, soft dispose tx aware.
-			}
+			//this code closes inner sessions and defeats the purpose of having a wrapper for session management
+			//else
+			//{
+			//	inner.Dispose(); //as nhib calls, soft dispose tx aware.
+			//}
 
 			return null;
 		}
