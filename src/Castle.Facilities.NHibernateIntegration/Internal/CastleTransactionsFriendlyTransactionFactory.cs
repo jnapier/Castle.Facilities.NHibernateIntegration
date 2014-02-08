@@ -141,7 +141,8 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 									session.Flush();
 								}
 							}
-							logger.Debug("prepared for DTC transaction " + AmbientTransation.TransactionInformation.LocalIdentifier);
+							//causes test failures because ambient transacaiton no longer has transaction information
+							//logger.Debug("prepared for DTC transaction " + AmbientTransation.TransactionInformation.LocalIdentifier);
 
 							//tx.Complete();
 						}
