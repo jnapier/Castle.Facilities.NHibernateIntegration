@@ -22,9 +22,9 @@ namespace Castle.Facilities.NHibernateIntegration
 	using MicroKernel;
 	using MicroKernel.Facilities;
 	using NHibernate;
-	using Services.Transaction;
+	using Castle.Transactions;
 	using log4net.Repository.Hierarchy;
-	using ITransaction = Services.Transaction.ITransaction;
+	using ITransaction = Castle.Transactions.ITransaction;
 	using IsolationLevel = System.Data.IsolationLevel;
 
 	/// <summary>

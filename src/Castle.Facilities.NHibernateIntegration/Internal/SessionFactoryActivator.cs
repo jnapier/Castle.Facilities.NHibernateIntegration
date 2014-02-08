@@ -35,7 +35,7 @@ namespace Castle.Facilities.NHibernateIntegration.Internal
 		/// <param name="kernel"></param>
 		/// <param name="onCreation"></param>
 		/// <param name="onDestruction"></param>
-		public SessionFactoryActivator(ComponentModel model, IKernel kernel,
+		public SessionFactoryActivator(ComponentModel model, IKernelInternal kernel,
 		                               ComponentInstanceDelegate onCreation, ComponentInstanceDelegate onDestruction)
 			: base(model, kernel, onCreation, onDestruction)
 		{

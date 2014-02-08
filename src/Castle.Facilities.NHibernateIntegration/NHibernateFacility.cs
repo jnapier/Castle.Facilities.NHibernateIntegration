@@ -29,7 +29,7 @@ namespace Castle.Facilities.NHibernateIntegration
 	using MicroKernel.Registration;
 	using MicroKernel.SubSystems.Conversion;
 	using NHibernate;
-	using Services.Transaction;
+	using Castle.Transactions;
 	using SessionStores;
 	using ILoggerFactory = Core.Logging.ILoggerFactory;
 
